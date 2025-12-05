@@ -1,0 +1,164 @@
+/* Main container */
+.er-registration-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #eaf8ff 0%, #e6f4ff 100%);
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+/* BIGGER CARD */
+.er-registration-card {
+  width: 900px;                 /* 🚀 Bigger than before */
+  max-width: calc(100% - 40px);
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 12px 35px rgba(16, 24, 40, 0.12);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 45% 55%; /* More space for left image */
+  border: 1px solid rgba(13, 71, 161, 0.05);
+  align-items: start;
+}
+
+/* LEFT SIDE */
+.er-event-preview {
+  padding: 22px;
+  background: #f9fbff;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-right: 1px solid #eef4f9;
+}
+
+.er-img-wrap {
+  width: 100%;
+  height: 240px;                /* visual box height */
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  align-items: center;          /* vertical center */
+  justify-content: center;      /* horizontal center */
+  padding: 6px;                 /* small inner spacing */
+  box-shadow: 0 8px 22px rgba(13,71,161,0.06);
+}
+
+.er-img-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+
+/* Event title */
+.er-event-preview h2 {
+  margin: 0;
+  font-size: 22px;              /* Larger text */
+  font-weight: 700;
+  color: #0b4aa1;
+}
+
+/* College name */
+.er-event-preview .er-college {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+/* Description */
+.er-event-preview .er-desc {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.4;
+}
+
+/* META AT BOTTOM */
+.er-event-meta {
+  margin-top: auto;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* RIGHT SIDE – FORM */
+.er-registration-form {
+  padding: 26px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Heading */
+.er-registration-form h3 {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0d47a1;
+  margin-bottom: 10px;
+}
+
+/* Labels */
+.er-registration-form label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Inputs */
+.er-registration-form input {
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 15px;
+  border: 1px solid #d5d9df;
+  background: #f9fbff;
+  transition: 0.2s;
+}
+
+.er-registration-form input:focus {
+  border-color: #2d86ff;
+  box-shadow: 0 6px 16px rgba(45, 134, 255, 0.15);
+}
+
+/* Buttons bigger */
+.er-submit-btn {
+  background: #2563eb;
+  color: #fff;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  margin-top: 10px;
+}
+
+.er-back-btn {
+  background: #6b7280;
+  color: #fff;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  border: none;
+  margin-top: 8px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 780px) {
+  .er-registration-card {
+    grid-template-columns: 1fr;
+  }
+
+  .er-event-preview img {
+    height: 200px;
+  }
+}

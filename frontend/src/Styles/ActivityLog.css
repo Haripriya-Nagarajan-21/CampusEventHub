@@ -1,0 +1,151 @@
+/* ============================================================
+   Modern Activity Log Styles (Glass UI + Neo Dashboard Theme)
+   ============================================================ */
+
+.panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  font-family: "Poppins", sans-serif;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.panel h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel h3::before {
+  content: "📊";
+  font-size: 1.3rem;
+}
+
+/* Smooth fade animation */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   Table Wrapper
+   ============================================================ */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Table */
+.activity-log-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Header */
+.activity-log-table th {
+  background: linear-gradient(90deg, #0757db, #0a68ff);
+  color: #ffffff;
+  padding: 16px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  border-right: 1px solid rgba(255,255,255,0.15);
+}
+
+.activity-log-table th:last-child {
+  border-right: none;
+}
+
+/* Row styling */
+.activity-log-table td {
+  padding: 14px 12px;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.25s ease;
+}
+
+.activity-log-table tbody tr {
+  background: #ffffff;
+}
+
+.activity-log-table tbody tr:hover {
+  background: #f0f7ff;
+  cursor: pointer;
+  transform: scale(1.002);
+  transition: 0.2s ease-in-out;
+}
+
+/* Highlight first column */
+.activity-log-table td:first-child {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* Empty state */
+.no-activity-found {
+  text-align: center;
+  padding: 40px 0;
+  color: #0757db;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ============================================================
+   Responsive — Mobile Stack Table
+   ============================================================ */
+@media (max-width: 768px) {
+
+  .panel {
+    padding: 20px;
+  }
+
+  .activity-log-table,
+  .activity-log-table thead,
+  .activity-log-table tbody,
+  .activity-log-table th,
+  .activity-log-table td,
+  .activity-log-table tr {
+    display: block;
+  }
+
+  .activity-log-table thead {
+    display: none;
+  }
+
+  .activity-log-table tbody tr {
+    margin-bottom: 12px;
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  }
+
+  .activity-log-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .activity-log-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #0757db;
+  }
+
+  .activity-log-table td:last-child {
+    border-bottom: none;
+  }
+}

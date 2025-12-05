@@ -1,0 +1,662 @@
+/* ===== Events Page Global ===== */
+.events-page-student {
+  padding: 30px 10px;
+  background-color: #f9fafb;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+}
+
+
+
+/* ===== Header Section ===== */
+.events-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.events-header h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.events-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  width: 360px;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.sort-btn {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.sort-btn:hover {
+  background-color: #1e40af;
+}
+
+/* ===== Filter Buttons ===== */
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.filter-btn {
+  border: 1px solid #2563eb;
+  background: white;
+  color: #2563eb;
+  border-radius: 20px;
+  padding: 8px 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+  background-color: #2563eb;
+  color: white;
+}
+/* Default (desktop auto grid) */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+/* Mobile (≤640px) → 1 column */
+@media (max-width: 640px) {
+  .events-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Tablet (641px–1023px) → 2 columns */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .events-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Desktop (≥1024px) → 3 columns */
+@media (min-width: 1024px) {
+  .events-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* ===== Event Card ===== */
+.event-card {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+}
+
+.event-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+/* ===== Event Info ===== */
+.event-info {
+  padding: 15px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.event-info h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 5px;
+}
+
+.event-info p {
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+
+/* ===== Register Button ===== */
+/* ===== Enhanced Back Button ===== */
+.back-title-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.3);
+}
+
+.back-btn:hover {
+  background: linear-gradient(135deg, #1e40af, #1d4ed8);
+  transform: translateX(-3px);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4);
+}
+
+/* ===== Enhanced Page Title ===== */
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111827;
+  font-family: sans-serif;
+  position: relative;
+  margin-left: 20px;
+  margin-bottom: 2px;
+
+}
+
+.page-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 50px;
+  height: 3px;
+  /* background: linear-gradient(90deg, #2563eb, #1d4ed8); */
+  text-align: center;
+ 
+}
+
+/* ===== Enhanced Register Button ===== */
+.btn {
+  margin-top: 1px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+  align-self: flex-start;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3);
+}
+
+.btn:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(37, 99, 235, 0.4);
+}
+
+.btn-disabled {
+  background: #9ca3af;
+  color: #f3f4f6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.delete-btn {
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.3s ease;
+}
+
+.delete-btn:hover {
+  background: #d9363e;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.icon-btn {
+  position: relative;
+  background: #2563eb;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.icon-btn:hover {
+  background: #1e40af;
+}
+
+/* Tooltip */
+.tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  width: max-content;
+  background-color: #111827;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 4px 8px;
+  position: absolute;
+  z-index: 10;
+  bottom: 125%; /* show above button */
+  left: 50%;
+  transform: translateX(-50%);
+  transition: opacity 0.3s;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.icon-btn:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Special style for delete button */
+.delete-icon-btn {
+  background: #ff4d4f;
+}
+
+.delete-icon-btn:hover {
+  background: #d9363e;
+}
+
+
+/* ===== No Events Message ===== */
+.no-events {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1rem;
+  margin-top: 40px;
+}
+
+/* ===== Admin Table View ===== */
+.events-container {
+  background-color: #f9fafb;
+  padding: 30px 60px;
+  min-height: 100vh;
+}
+
+.events-container table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.events-container th,
+.events-container td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.events-container th {
+  background-color: #2563eb;
+  color: white;
+  font-weight: 600;
+}
+
+.events-container td img {
+  width: 80px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.events-container tr:hover {
+  background-color: #f3f4f6;
+  cursor: pointer;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .events-page-student {
+    padding: 20px;
+  }
+
+  .events-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .events-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* ===== Back Button and Header Alignment ===== */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* space between back button and heading */
+}
+
+.back-btn {
+  background-color: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: #1e40af;
+  transform: translateX(-2px);
+}
+/* ===== Modal for registrations (admin) ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.modal {
+  width: 100%;
+  max-width: 960px;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 20px 50px rgba(2,6,23,0.35);
+  max-height: 85vh;
+  overflow: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+/* badge for showing counts */
+.badge {
+  display: inline-block;
+  background: linear-gradient(135deg,#efefef,#d1d5db);
+  color: #111827;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  align-self: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+/* registrations table */
+.registrations-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+.registrations-table th,
+.registrations-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eef2f7;
+  text-align: left;
+  font-size: 0.95rem;
+}
+.registrations-table th {
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #111827;
+}
+.registrations-table tr:nth-child(even) td {
+  background: #fafafa;
+}
+/* ===== Modal z-index / full overlay improvements ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999; /* very high so it covers everything */
+  padding: 20px;
+  backdrop-filter: blur(3px);
+}
+
+/* Modal container */
+.modal {
+  width: 100%;
+  max-width: 1100px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 30px 80px rgba(2,6,23,0.4);
+  max-height: 85vh;
+  overflow: auto;
+}
+
+/* Smaller confirmation modal (delete) */
+.modal.confirm-delete {
+  max-width: 520px;
+  padding: 18px 20px;
+  border-radius: 10px;
+  box-shadow: 0 18px 40px rgba(2,6,23,0.35);
+}
+
+.modal.confirm-delete .confirm-message {
+  text-align: center;
+  font-size: 1rem;
+  color: #374151;
+}
+
+.modal.confirm-delete .confirm-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+@media (max-width: 520px) {
+  .modal.confirm-delete { max-width: 92%; padding: 14px; }
+}
+
+/* Lock background when modal open */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Hide distracting UI elements while modal is open (customize selectors to your app) */
+body.modal-open .back-btn,
+body.modal-open .sidebar,
+body.modal-open .header-left,
+body.modal-open .topbar {
+  display: none !important;
+}
+
+/* Improve header layout inside modal */
+.modal-header h3 {
+  font-size: 1.15rem;
+  color: #111827;
+}
+
+/* Buttons in modal: consistent */
+.modal .btn,
+.modal .sort-btn {
+  border-radius: 10px;
+  padding: 8px 14px;
+  width: 100%;
+}
+
+/* Make table header striking */
+.registrations-table thead th {
+  background: #2563eb;
+  color: #fff;
+  font-weight: 700;
+  padding: 12px 14px;
+}
+
+/* Table rows */
+.registrations-table tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f0f2f6;
+}
+
+/* Make the modal's close and action buttons look modern */
+.modal .btn {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border: none;
+  box-shadow: 0 6px 18px rgba(37,99,235,0.15);
+}
+
+/* Export button */
+.modal .sort-btn {
+  background: white;
+  color: #2563eb;
+  border: 1px solid #2563eb;
+}
+
+/* Ensure modal screenshot for PDF looks clean */
+.modal img {
+  max-width: 120px;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Responsive tweak */
+@media (max-width: 900px) {
+  .modal { padding: 12px; max-width: 96%; }
+  .modal-header { flex-direction: column; gap: 8px; align-items: flex-start; }
+  .modal .search-input { width: 100%; }
+}
+
+/* ===== Categorized Events Container ===== */
+.events-categorized-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  margin-top: 2rem;
+}
+
+.events-category-section {
+  margin-bottom: 2rem;
+}
+
+.category-header {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid;
+}
+
+.category-header.upcoming {
+  color: #2563eb;
+  border-color: #2563eb;
+}
+
+.category-header.ongoing {
+  color: #f59e0b;
+  border-color: #f59e0b;
+}
+
+.category-header.past {
+  color: #6b7280;
+  border-color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .events-categorized-container {
+    gap: 2rem;
+  }
+  
+  .category-header {
+    font-size: 1.25rem;
+  }
+}
+
+/* Extra-small devices: narrow phones (≤480px) */
+@media (max-width: 480px) {
+  .events-page-student { padding: 12px 10px; }
+  .events-header h2 { font-size: 1.4rem; }
+  .events-header { gap: 8px; }
+  .search-input { width: 100%; }
+  .events-grid { gap: 14px; }
+  .event-card img { height: 140px; }
+  .event-info { padding: 12px; }
+  .event-info h3 { font-size: 1rem; }
+  .event-info p { font-size: 0.92rem; }
+  .btn { padding: 8px 14px; font-size: 0.92rem; }
+  .modal.confirm-delete { max-width: 92%; padding: 12px; }
+}
+
+/* Very small phones (≤360px) */
+@media (max-width: 360px) {
+  .events-page-student { padding: 10px 8px; }
+  .events-header h2 { font-size: 1.2rem; }
+  .event-card img { height: 120px; }
+  .event-info h3 { font-size: 0.98rem; }
+  .event-info p { font-size: 0.85rem; }
+  .btn { padding: 7px 12px; font-size: 0.85rem; }
+}

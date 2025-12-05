@@ -1,0 +1,230 @@
+.login-wrapper {
+    display: flex;
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.login-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #ffffff;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-form h2,
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #1a1a1a;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: #737373;
+    margin-bottom: 2rem;
+    margin-right: 39%;
+}
+
+.link {
+    color: #0066ff;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.link:hover {
+    color: #0052cc;
+}
+
+.form-container {
+    width: 100%;
+}
+
+.login-form label,
+.label {
+    display: block;
+    margin-top: 1.2rem;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #404040;
+}
+
+.login-form input[type="email"],
+.login-form input[type="text"]:not(.password-input),
+.input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #d4d4d4;
+    font-size: 15px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input:focus,
+.login-form input:focus {
+    border-color: #0066ff;
+}
+
+.login-password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.login-password-wrapper input,
+.login-password-input {
+    width: 100%;
+    padding: 12px 45px 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #d4d4d4;
+    font-size: 15px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.password-input:focus {
+    border-color: #0066ff;
+}
+
+.eye-button {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.eye-button:hover {
+    background-color: #f3f4f6;
+}
+
+.remember-forgot-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.remember-me input[type="checkbox"],
+.checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: #0066ff;
+    cursor: pointer;
+}
+
+.remember-me label,
+.checkbox-label {
+    font-size: 0.9rem;
+    color: #525252;
+    cursor: pointer;
+    user-select: none;
+    margin: 0;
+}
+
+.forgot-link {
+    font-size: 0.9rem;
+    color: #0066ff;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.login-form button[type="submit"],
+.submit-button {
+    width: 100%;
+    margin-top: 1.8rem;
+    background-color: #0066ff;
+    color: white;
+    border: none;
+    padding: 13px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.submit-button:hover,
+.login-form button[type="submit"]:hover {
+    background-color: #0052cc;
+}
+
+.login-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9fafb;
+}
+
+.login-right img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    max-width: 500px;
+}
+
+.illustration-placeholder {
+    width: 80%;
+    max-width: 500px;
+    aspect-ratio: 1;
+    background-color: #e5e7eb;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholder-text {
+    color: #9ca3af;
+    font-size: 1.1rem;
+}
+
+.login-form input,
+.login-form select,
+.login-form .login-password-wrapper {
+    margin-top: 0.9rem;
+}
+
+.login-form input:first-of-type {
+    margin-top: 0;
+}
+
+@media (max-width: 768px) {
+    .login-wrapper {
+        flex-direction: column;
+    }
+
+    .login-right {
+        min-height: 300px;
+    }
+}

@@ -1,0 +1,341 @@
+
+/* ---------- Search Bar ---------- */
+.feedback-search-container {
+  margin: 20px 0;
+  width: 100%;
+}
+
+.feedback-search-input {
+  width: 100%;
+  padding: 13px 18px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  font-size: 0.95rem;
+  transition: 0.25s ease;
+}
+
+.feedback-search-input:focus {
+  border-color: #0757db;
+  box-shadow: 0 0 0 3px rgba(7, 87, 219, 0.25);
+}
+
+/* ============================================================
+   Table Wrapper + Table
+   ============================================================ */
+.feedback-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 10px;
+}
+
+.feedback-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  min-width: 900px;
+}
+
+/* Header */
+.feedback-table th {
+  background: linear-gradient(90deg, #0757db, #0a68ff);
+  color: #ffffff;
+  padding: 16px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.feedback-table th:last-child {
+  border-right: none;
+}
+
+/* Rows */
+.feedback-table td {
+  padding: 14px 12px;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: top;
+}
+
+.feedback-table tbody tr {
+  transition: 0.25s ease;
+}
+
+.feedback-table tbody tr:hover {
+  background: #f0f7ff;
+  transform: scale(1.002);
+}
+
+/* Comments Wrap */
+.feedback-comments {
+  max-width: 380px;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* Delete Button */
+.feedback-delete-btn {
+  border: none;
+  background: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: 0.2s ease;
+}
+
+.feedback-delete-btn:hover {
+  color: #dc2626;
+  transform: scale(1.18);
+}
+
+/* Empty State */
+.feedback-empty {
+  text-align: center;
+  padding: 40px 0;
+  font-size: 1.1rem;
+  color: #0757db;
+  font-weight: 600;
+}
+
+/* ============================================================
+   Delete Modal – Glass UI
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 18px;
+  backdrop-filter: blur(3px);
+  z-index: 1000;
+}
+
+.feedback-delete-modal {
+  width: 360px;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 26px;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  animation: popup 0.3s ease;
+  position: relative;
+}
+
+@keyframes popup {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-warning {
+  margin-top: 8px;
+  color: #dc2626;
+  font-size: 0.9rem;
+}
+
+.modal-actions {
+  margin-top: 26px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.modal-delete-btn,
+.modal-cancel-btn {
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s ease;
+}
+
+.modal-delete-btn {
+  background: #ef4444;
+  color: white;
+}
+
+.modal-delete-btn:hover {
+  background: #dc2626;
+}
+
+.modal-cancel-btn {
+  background: #6b7280;
+  color: white;
+}
+
+.modal-cancel-btn:hover {
+  background: #4b5563;
+}
+
+/* ============================================================
+   Responsive — Mobile Stack Table
+   ============================================================ */
+@media (max-width: 768px) {
+
+  .feedback-panel {
+    padding: 20px;
+  }
+
+  .feedback-table,
+  .feedback-table thead,
+  .feedback-table tbody,
+  .feedback-table th,
+  .feedback-table td,
+  .feedback-table tr {
+    display: block;
+  }
+
+  .feedback-table thead {
+    display: none;
+  }
+
+  .feedback-table tbody tr {
+    margin-bottom: 14px;
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  .feedback-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .feedback-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #0757db;
+    margin-right: 10px;
+  }
+
+  .feedback-table td:last-child {
+    border-bottom: none;
+  }
+}
+/* ============================================================
+   🌟 ADMIN FEEDBACK PAGE STYLING
+============================================================== */
+
+.admin-feedback-container {
+  padding: 2px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===========================
+   HEADER
+=========================== */
+.feedback-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #222;
+}
+
+
+/* ===========================
+   ANALYTICS SECTION
+=========================== */
+.feedback-analytics {
+  margin-top: 25px;
+}
+
+.feedback-analytics h3 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.analytics-card {
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.analytics-card h4 {
+  color: #444;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.analytics-card p {
+  font-size: 22px;
+  font-weight: bold;
+  color: #2563eb;
+}
+
+/* ===========================
+   CHARTS GRID
+=========================== */
+.feedback-charts {
+  margin-top: 35px;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.chart-card {
+  background: #ffffff;
+  padding: 10px;
+  border-radius: 14px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.chart-card h4 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  
+}
+
+
+/* When sidebar is open → reduce card size */
+.sidebar-open .charts-grid {
+  grid-template-columns: repeat(auto-fit, minmax(313px, 1fr)) !important;
+}
+
+.sidebar-open .chart-card {
+  padding: 5px !important;
+  transform: scale(0.95); /* optional smooth shrink */
+}
+.sidebar-open .chart-card .recharts-wrapper {
+  width: 100% !important;       /* reduce width safely */
+  max-width: 350px !important; /* ensure it does not stretch */
+  margin-left: -10px !important;
+ 
+  height: 250px !important; 
+     /* keep height consistent */
+}
+
+
+/* Reduce legend font size */
+.sidebar-open .chart-card .recharts-legend-item-text {
+  font-size: 11px !important;
+   margin-left: -3px !important;
+  
+}
+
+
+

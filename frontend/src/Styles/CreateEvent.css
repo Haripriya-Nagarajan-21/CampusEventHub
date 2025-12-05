@@ -1,0 +1,154 @@
+/* Container styling */
+.create-event-container {
+  max-width: 800px;
+  margin: 5px auto;
+  background: #ffffff;
+  padding: 40px 50px;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+/* Header */
+.create-event-container h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: #1d3557;
+  margin-bottom: 1px;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #6c757d;
+  margin-bottom: 30px;
+  font-size: 1rem;
+}
+
+/* Form styling */
+.create-event-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.create-event-form label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.create-event-form input,
+.create-event-form textarea,
+.create-event-form select {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 18px;
+  border: 1.5px solid #ccc;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+}
+
+.create-event-form input:focus,
+.create-event-form textarea:focus,
+.create-event-form select:focus {
+  border-color: #007bff;
+  background-color: #fff;
+  box-shadow: 0px 0px 8px rgba(0, 123, 255, 0.3);
+}
+
+/* Form row for date/time */
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.form-row div {
+  flex: 1;
+}
+
+/* Button group */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.create-btn,
+.cancel-btnc {
+  padding: 12px 25px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+/* Create button */
+.create-btn {
+  background: linear-gradient(90deg, #007bff, #00b4d8);
+  color: white;
+  box-shadow: 0px 4px 10px rgba(0, 123, 255, 0.4);
+}
+
+.create-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0px 6px 14px rgba(0, 123, 255, 0.6);
+}
+
+/* Cancel button */
+.cancel-btnc {
+  background: #dee2e6;
+  color: #333;
+  min-width: 20%;
+}
+
+.cancel-btnc:hover {
+  background: #adb5bd;
+  color: #fff;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .create-event-container {
+    width: 90%;
+    padding: 25px 20px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .create-btn,
+  .cancel-btnc {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-event-container h1 {
+    font-size: 1.6rem;
+  }
+  .subtitle {
+    font-size: 0.9rem;
+  }
+}

@@ -1,0 +1,591 @@
+:root {
+  --content-max-width: 1300px;
+  --page-side-padding: 1.5rem; /* used for small screens */
+}
+
+.page-inner {
+  max-width: 1200px;        /* same reference width as other pages */
+  margin: 0 auto;           /* center horizontally */
+  padding: 0 20px;          /* left/right gutter that matches navbar */
+  box-sizing: border-box;
+}
+.disabled-btn {
+  background-color: #c8c8c8 !important;  /* Light gray */
+  color: #666 !important;                /* Dark gray text */
+  cursor: not-allowed !important;
+  opacity: 0.7;
+  border: 1px solid #aaa;
+}
+/* Tooltip Container */
+.tooltip {
+  position: relative;
+ 
+}
+
+/* Tooltip Text */
+.tooltip:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: 120%; /* place above the button */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  white-space: nowrap;
+  z-index: 1000;
+  opacity: 1;
+  pointer-events: none;
+}
+
+/* Tooltip Arrow */
+.tooltip:hover::before {
+  content: "";
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
+/* Hidden by default */
+.tooltip::after,
+.tooltip::before {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.tooltip:hover::after,
+.tooltip:hover::before {
+  opacity: 1;
+}
+
+/* Gradient header – inside .page-inner so no hard left/right margins */
+.registrations-header {
+  margin: 28px 0 20px 0;    /* top/bottom only, left/right from .page-inner */
+  padding: 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+.registrations-header h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+}
+
+.registrations-header p {
+  margin: 0;
+  opacity: 0.95;
+  font-size: 1rem;
+}
+
+/* Container sits inside .page-inner; remove hard left/right margins */
+.registrations-container {
+  max-width: 100%;
+  margin: 0;
+  padding: 0 0 48px 0;
+  box-sizing: border-box;
+}
+
+.registrations-category {
+  margin-bottom: 3rem;
+}
+
+/* =======================
+   TITLES
+   ======================= */
+
+.category-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid;
+  margin-left: 0; /* flush with container */
+}
+
+.category-title.upcoming { color: #2563eb; border-color: #2563eb; }
+.category-title.ongoing  { color: #f59e0b; border-color: #f59e0b; }
+.category-title.past     { color: #6b7280; border-color: #6b7280; }
+
+/* =======================
+   GRID
+   ======================= */
+.icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  
+}
+
+.icon-btn .btn-text {
+  display: none; /* hide text initially */
+  margin-left: 5px;
+}
+
+.icon-btn:hover .btn-text {
+  display: inline-block; /* show text on hover */
+}
+
+.icon-btn.disabled-btn {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.inline-actions .delete-btn {
+  background: #dc3545;
+ 
+}
+
+.inline-actions .delete-btn:hover {
+  background: #c82333;
+}
+
+.inline-actions .feedback-btn:hover {
+  background: #0056b3;
+
+}
+
+.registrations-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 per row */
+  gap: 1.8rem;
+  margin-top: 1rem;
+  align-items: start;
+}
+
+/* Card */
+.registration-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.registration-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+/* Image */
+.registration-card img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+/* Info */
+.registration-info {
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.registration-info h4 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.15rem;
+  color: #111827;
+}
+
+.registration-info p {
+  margin: 0.38rem 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+/* Status row */
+.status-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid #e5e7eb;
+}
+
+.status-badge {
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.status-approved,
+.status-pending,
+.status-rejected {
+  font-weight:500;
+  font-size:0.9rem;
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+}
+
+.status-approved { color:#059669; }
+.status-pending  { color:#d97706; }
+.status-rejected { color:#dc2626; }
+
+/* Actions */
+.delete-inline-btn,
+.feedback-inline-btn {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  white-space: nowrap;
+  font-size: 0.95rem;
+}
+
+.delete-inline-btn   { background: #dc2626; color: #fff; }
+.feedback-inline-btn { background: #2563eb; color: #fff; }
+
+.delete-inline-btn:hover,
+.feedback-inline-btn:hover {
+  filter: brightness(0.95);
+}
+
+.status-row .inline-actions {
+  display:flex;
+  gap:25px;
+  align-items:center;
+}
+
+/* Empty state */
+.empty-message {
+  text-align: center;
+  padding: 3rem;
+  color: #9ca3af;
+  font-size: 1.1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 2px dashed #e5e7eb;
+}
+
+/* =======================
+   NAVBAR / PROFILE / NOTIF
+   ======================= */
+
+.logo {
+  margin:0;
+  font-size:1.15rem;
+  font-weight:700;
+  color:#0f172a;
+}
+
+/* search center */
+.nav-center {
+  flex:1;
+  display:flex;
+  justify-content:center;
+}
+
+.search-bar {
+  width:60%;
+  max-width:640px;
+  min-width:220px;
+  display:flex;
+  align-items:center;
+  background:#fff;
+  border-radius:28px;
+  padding:10px 16px;
+  box-shadow: 0 6px 20px rgba(16,24,40,0.06);
+}
+
+.search-bar input {
+  border:none;
+  outline:none;
+  flex:1;
+  font-size:0.95rem;
+  background:transparent;
+  margin-left:8px;
+}
+
+/* right area */
+.nav-right {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  position:relative;
+}
+
+/* profile inline */
+.profile-inline {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  padding:6px 8px;
+  border-radius:10px;
+}
+
+.avatar {
+  width:40px;
+  height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+  color:#2563eb;
+  border-radius:50%;
+  box-shadow: 0 4px 12px rgba(16,24,40,0.06);
+  font-size:22px;
+}
+
+.profile-name {
+  font-weight:600;
+  color:#0f172a;
+  white-space:nowrap;
+  margin-right:8px;
+}
+
+/* profile dropdown */
+.profile-dropdown {
+  position:absolute;
+  right:8px;
+  top:62px;
+  background:#fff;
+  border-radius:10px;
+  box-shadow:0 8px 30px rgba(15,23,42,0.12);
+  padding:10px;
+  width:220px;
+  z-index:50;
+}
+
+.profile-dropdown p {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px;
+  margin:0;
+  cursor:pointer;
+  border-radius:8px;
+}
+
+.profile-dropdown p:hover {
+  background:#f3f4f6;
+}
+
+/* notifications */
+.notif-container { position:relative; }
+
+.bell-btn {
+  background:transparent;
+  border:none;
+  font-size:20px;
+  cursor:pointer;
+  position:relative;
+  padding:8px;
+  border-radius:8px;
+}
+
+.badge {
+  position:absolute;
+  top:6px;
+  right:6px;
+  background:#ef4444;
+  color:white;
+  font-size:12px;
+  padding:2px 6px;
+  border-radius:999px;
+}
+
+/* notif dropdown */
+.notif-dropdown {
+  position:absolute;
+  right:8px;
+  top:62px;
+  width:260px;
+  background:#fff;
+  border-radius:10px;
+  box-shadow:0 8px 30px rgba(15,23,42,0.12);
+  z-index:60;
+  padding:8px;
+}
+
+.notif-header {
+  font-weight:700;
+  padding:8px 10px;
+  border-bottom:1px solid #eef2ff;
+}
+
+.notif-list {
+  list-style:none;
+  padding:8px;
+  margin:0;
+  max-height:240px;
+  overflow:auto;
+}
+
+.notif-item {
+  padding:8px 10px;
+  cursor:pointer;
+  border-radius:8px;
+}
+
+.notif-item:hover {
+  background:#f3f4f6;
+}
+
+.notif-empty {
+  padding:12px;
+  color:#6b7280;
+}
+
+/* =======================
+   MODALS
+   ======================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 90;
+}
+
+.edit-profile-modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  width: 420px;
+  max-width: calc(100% - 32px);
+  box-shadow: 0 12px 40px rgba(2,6,23,0.2);
+}
+
+.settings-modal h3 {
+  margin-top:0;
+}
+
+.modal-buttons {
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:14px;
+}
+
+.cancel-btn {
+  background:#f3f4f6;
+  border:none;
+  padding:8px 12px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.delete-btn {
+  background:#dc2626;
+  color:#fff;
+  border:none;
+  padding:8px 12px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.theme-toggle-btn {
+  background:#111827;
+  color:#fff;
+  border:none;
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+/* =======================
+   RESPONSIVE
+   ======================= */
+
+@media (max-width: 1100px) {
+  .registrations-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .search-bar { width: 75%; }
+  .registrations-container {
+    padding: 0 0 2rem 0;
+    margin: 0 1.25rem 2rem 1.25rem;
+    max-width: calc(var(--content-max-width));
+  }
+  .registrations-header {
+    margin: 1.25rem 1.25rem 1.5rem 1.25rem;
+    padding: 1.6rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .search-bar { width: 85%; }
+  .profile-name { display:none; }
+  .nav-center { justify-content:flex-start; }
+  .registrations-header {
+    margin: 1rem 1rem 1.25rem 1rem;
+  }
+  .registrations-container {
+    margin: 0 1rem 2rem 1rem;
+  }
+}
+
+@media (max-width: 650px) {
+  .registrations-grid {
+    grid-template-columns: 1fr;
+  }
+  .search-bar {
+    width: 100%;
+    min-width: 0;
+  }
+  .registration-card img {
+    aspect-ratio: 3 / 2;
+  }
+  .registration-info {
+    padding: 0.9rem 1rem;
+  }
+  .registrations-header {
+    padding: 1.2rem;
+    margin: 1rem;
+  }
+}
+
+/* long title clamp */
+.registration-info h4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cancel-btn,
+.delete-btn {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  padding: 10px 0 !important;
+}
