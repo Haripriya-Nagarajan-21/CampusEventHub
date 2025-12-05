@@ -1,0 +1,243 @@
+/* PAGE */
+.profile-page {
+  padding: 20px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+/* PROFILE CARD */
+.profile-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px;
+  background: var(--panel);
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  margin-bottom: 25px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.profile-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.avatar-circle {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.profile-name {
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.profile-left p {
+  margin: 5px 0;
+  color: var(--muted);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.modern-edit-btn {
+  background: var(--primary);
+  padding: 10px 18px;
+  border-radius: 10px;
+  color: white;
+  border: none;
+  display: flex;
+  gap: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.modern-edit-btn:hover {
+  box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+  transform: translateY(-2px);
+}
+
+/* STATS */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.stat-box {
+  background: var(--panel);
+  padding: 18px;
+  text-align: center;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+  border: 1px solid rgba(0,0,0,0.05);
+  transition: 0.25s ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+}
+
+.stat-box h3 {
+  margin: 0;
+  font-size: 30px;
+  color: var(--primary);
+}
+
+/* MODERN FILTER PILLS */
+.tabs {
+  margin-top: 28px;
+  display: flex;
+  gap: 12px;
+}
+
+.tabs button {
+  padding: 8px 22px;
+  border-radius: 30px;
+  border: 1px solid #d0d7e2;
+  background: var(--panel);
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.tabs button:hover {
+  background: #e8eef9;
+}
+
+.tabs button.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, .35);
+}
+
+/* EVENTS GRID */
+.events-grid {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 24px;
+}
+
+/* EVENT CARD */
+.event-card {
+  background: var(--panel);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+  transition: 0.25s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 26px rgba(0,0,0,0.15);
+}
+
+.event-image {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+}
+
+.event-details {
+  padding: 16px;
+}
+
+.event-title {
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+}
+
+/* STATUS CHIPS */
+.status-chip {
+  margin-top: 12px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.status-approved {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-pending {
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+
+.status-rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* EDIT MODAL */
+.edit-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.edit-modal {
+  background: white;
+  padding: 25px;
+  width: 400px;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.edit-modal label {
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.edit-modal input {
+  margin-top: 6px;
+  padding: 10px;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.save-btn {
+  padding: 10px 16px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  padding: 10px 16px;
+  background: #ccc;
+  color: black;
+  border-radius: 8px;
+  cursor: pointer;
+}

@@ -17,6 +17,7 @@ import EventRegistration from "./Pages/EventRegistration";
 
 import AdminFeedbackPage from "./Pages/AdminFeedbackPage";
 import StudentRegistrations from "./Pages/StudentRegistrations";
+import StudentProfile from "./Pages/StudentProfile";
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
         <Route path="/student-dashboard" element={<StudentDashboard/>}/>
         <Route path="/create-event" element={<CreateEvent />} />
         <Route path="/event-registration" element={<EventRegistration />} />
+        <Route path="/student/profile" element={<StudentProfile />} />
       </Routes>
     </Router>
   );

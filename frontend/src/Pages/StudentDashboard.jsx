@@ -119,13 +119,28 @@ const StudentDashboard = () => {
 
   const seenKey = (email) => `seenApproved_${email}`;
 
-  useEffect(() => {
-    if (!student?.email) return;
-    const approved = getApprovedIds();
-    const seen = JSON.parse(localStorage.getItem(seenKey(student.email))) || [];
-    setUnseenApprovedIds(approved.filter((id) => !seen.includes(id)));
-  }, [registrations, student?.email]);
+// 🔄 AUTO REFRESH REGISTRATIONS EVERY 10 SECONDS
+useEffect(() => {
+  if (!student?.email) return;
 
+  const interval = setInterval(async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/registrations/student/${student.email}`
+      );
+      const data = await res.json();
+      const sorted = (data.registrations || data || []).sort(
+        (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+      );
+
+      setRegistrations(sorted);
+    } catch (err) {
+      console.log("Auto-refresh error");
+    }
+  }, 10000);
+
+  return () => clearInterval(interval);
+}, [student?.email]);
   const handleBellClick = () => {
     if (!student?.email) return;
     const approved = getApprovedIds();
