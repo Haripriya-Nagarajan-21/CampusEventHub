@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../config/axios";
-import "../styles/signup.css";
+import "../styles/Signup.css";
 import signupImage from "../assets/college students-amico.svg";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { notifySuccess, notifyError, notifyWarn } from "../utils/toast";
