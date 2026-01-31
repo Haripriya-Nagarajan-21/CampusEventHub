@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../Styles/login.css";
+import "../Styles/Login.css";
 import loginImage from "../assets/login-illustration.svg";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
