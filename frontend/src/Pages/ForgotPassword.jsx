@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../styles/ForgotPassword.css";
+import "../Styles/ForgotPassword.css";
 import forgotPasswordIllustration from "../assets/Forgot password-pana 1.svg";
 import { notifyError, notifySuccess } from "../utils/toast";
 
