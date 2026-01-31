@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../styles/VerifyOtp.css";
+import "../Styles/VerifyOtp.css";
 import otpIllustration from "../assets/Forgot password-pana 1.svg";
 import { notifyError, notifyInfo, notifySuccess } from "../utils/toast";
 
