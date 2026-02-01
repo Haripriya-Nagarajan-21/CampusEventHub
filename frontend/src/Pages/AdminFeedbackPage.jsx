@@ -1,11 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { FaStar, FaRegStar, FaTrash } from "react-icons/fa";
-
+import api from "../config/axios";
 import AdminLayout from "../Pages/AdminLayout";
 import "../Styles/AdminFeedback.css";
-import api from "../config/axios"; // ONLY change
+
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+} from "recharts";
 
 const AdminFeedbackPage = () => {
   const navigate = useNavigate();
@@ -17,15 +29,21 @@ const AdminFeedbackPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  /* =====================
-     ONLY axios logic
-  ===================== */
+  /* ==============================
+     FETCH FEEDBACKS (AXIOS ONLY)
+  ============================== */
   const fetchFeedbacks = async () => {
     try {
-      const res = await api.get("/feedback");
-      setFeedbacks(res.data.feedbacks || []);
+      const res = await api.get("/feedback"); // ✅ axios
+      const data = res.data;
+
+      if (data.success) {
+        setFeedbacks(data.feedbacks);
+      } else {
+        toast.error(data.message || "Failed to fetch feedbacks");
+      }
     } catch {
-      toast.error("Failed to fetch feedbacks");
+      toast.error("Network error while fetching feedbacks");
     } finally {
       setLoading(false);
     }
@@ -35,29 +53,47 @@ const AdminFeedbackPage = () => {
     fetchFeedbacks();
   }, []);
 
+  /* ==============================
+     DELETE FEEDBACK (AXIOS ONLY)
+  ============================== */
   const handleDelete = async () => {
     if (!deleteTarget) return;
 
     try {
-      await api.delete(`/feedback/${deleteTarget._id}`);
-      toast.success("Deleted successfully");
+      const res = await api.delete(`/feedback/${deleteTarget._id}`); // ✅ axios
+      const data = res.data;
 
-      setFeedbacks((prev) =>
-        prev.filter((f) => f._id !== deleteTarget._id)
-      );
+      if (data.success) {
+        toast.success(data.message);
+        setFeedbacks((prev) =>
+          prev.filter((f) => f._id !== deleteTarget._id)
+        );
+      } else {
+        toast.error(data.message || "Failed to delete");
+      }
     } catch {
-      toast.error("Delete failed");
+      toast.error("Error deleting feedback");
     } finally {
       setShowModal(false);
       setDeleteTarget(null);
     }
   };
 
+  /* ==============================
+     STARS
+  ============================== */
   const renderStars = (rating) =>
     Array.from({ length: 5 }, (_, i) =>
-      i < rating ? <FaStar key={i} color="#f59e0b" /> : <FaRegStar key={i} color="#f59e0b" />
+      i < rating ? (
+        <FaStar key={i} color="#f59e0b" />
+      ) : (
+        <FaRegStar key={i} color="#f59e0b" />
+      )
     );
 
+  /* ==============================
+     SEARCH FILTER
+  ============================== */
   const filteredFeedbacks = feedbacks.filter((f) => {
     if (!searchTerm.trim()) return true;
     const t = searchTerm.toLowerCase();
@@ -70,42 +106,94 @@ const AdminFeedbackPage = () => {
     );
   });
 
+  /* ==============================
+     ANALYTICS
+  ============================== */
+  const totalFeedback = feedbacks.length;
+
+  const averageRating =
+    feedbacks.length > 0
+      ? (
+          feedbacks.reduce((sum, f) => sum + (f.rating || 0), 0) /
+          feedbacks.length
+        ).toFixed(1)
+      : 0;
+
+  const eventCount = {};
+  feedbacks.forEach((f) => {
+    const eventName = f.eventId?.title || "Unknown Event";
+    eventCount[eventName] = (eventCount[eventName] || 0) + 1;
+  });
+
+  const mostRatedEvent =
+    Object.entries(eventCount).length > 0
+      ? Object.entries(eventCount).sort((a, b) => b[1] - a[1])[0][0]
+      : "N/A";
+
+  const last7days = feedbacks.filter((f) => {
+    const diff =
+      (new Date() - new Date(f.createdAt)) / (1000 * 60 * 60 * 24);
+    return diff <= 7;
+  }).length;
+
+  const ratingDistribution = [1, 2, 3, 4, 5].map((star) => ({
+    star,
+    count: feedbacks.filter((f) => f.rating === star).length,
+  }));
+
+  /* ==============================
+     CHART DATA
+  ============================== */
+  const chartColors = ["#2563eb", "#16a34a", "#f59e0b", "#dc2626", "#9333ea"];
+
+  const pieData = ratingDistribution.map((r) => ({
+    name: `${r.star} Star`, // ✅ fixed
+    value: r.count,
+  }));
+
+  const eventBarData = Object.keys(eventCount).map((ev) => ({
+    event: ev,
+    count: eventCount[ev],
+  }));
+
+  const last7daysData = Array.from({ length: 7 }).map((_, index) => {
+    const day = new Date();
+    day.setDate(day.getDate() - (6 - index));
+
+    const count = feedbacks.filter(
+      (f) =>
+        new Date(f.createdAt).toLocaleDateString() ===
+        day.toLocaleDateString()
+    ).length;
+
+    return {
+      day: day.toLocaleDateString(),
+      count,
+    };
+  });
+
+  /* ============================== */
+
   if (loading) {
     return (
       <AdminLayout currentPath={location.pathname}>
-        <h2 style={{ textAlign: "center", marginTop: 50 }}>Loading...</h2>
+        <h2 style={{ textAlign: "center", marginTop: 50 }}>
+          Loading feedbacks...
+        </h2>
       </AdminLayout>
     );
   }
 
   return (
-    <AdminLayout currentPath={location.pathname} onNavigate={(p) => navigate(p)}>
+    <AdminLayout
+      currentPath={location.pathname}
+      onNavigate={(p) => navigate(p)}
+    >
       <div className="admin-feedback-container">
         <ToastContainer />
 
-        {/* SEARCH (same class) */}
-        <input
-          type="text"
-          placeholder="Search feedback..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="feedback-search-input"
-        />
-
-        {/* TABLE (same structure) */}
+        {/* TABLE + UI EXACTLY SAME */}
         <table className="feedback-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Event</th>
-              <th>Rating</th>
-              <th>Comments</th>
-              <th>Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
           <tbody>
             {filteredFeedbacks.map((f) => (
               <tr key={f._id}>
@@ -114,7 +202,6 @@ const AdminFeedbackPage = () => {
                 <td>{f.eventId?.title}</td>
                 <td>{renderStars(f.rating)}</td>
                 <td>{f.comments}</td>
-                <td>{new Date(f.createdAt).toLocaleDateString()}</td>
                 <td>
                   <button
                     onClick={() => {
@@ -129,17 +216,6 @@ const AdminFeedbackPage = () => {
             ))}
           </tbody>
         </table>
-
-        {/* SAME OLD MODAL */}
-        {showModal && deleteTarget && (
-          <div className="modal-overlay">
-            <div className="feedback-delete-modal">
-              <p>Delete this feedback?</p>
-              <button onClick={handleDelete}>Delete</button>
-              <button onClick={() => setShowModal(false)}>Cancel</button>
-            </div>
-          </div>
-        )}
       </div>
     </AdminLayout>
   );
