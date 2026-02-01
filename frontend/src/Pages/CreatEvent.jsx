@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../Styles/CreateEvent.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import api from "../config/axios"; 
+import api from "../config/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -10,6 +10,7 @@ const CreateEvent = () => {
   const location = useLocation();
 
   const [loading, setLoading] = useState(false);
+  const [preview, setPreview] = useState(null);
 
   const [eventData, setEventData] = useState({
     title: "",
@@ -24,7 +25,9 @@ const CreateEvent = () => {
   const isEdit = location?.state?.isEdit || false;
   const editEvent = location?.state?.event || null;
 
-  // ✅ Prefill when editing
+  /* =========================
+     PREFILL WHEN EDITING
+  ========================= */
   useEffect(() => {
     if (isEdit && editEvent) {
       setEventData({
@@ -38,21 +41,32 @@ const CreateEvent = () => {
         venue: editEvent.venue || "",
         image: null,
       });
+
+      setPreview(editEvent.image || null);
     }
   }, [isEdit, editEvent]);
 
-  // ✅ Handle form change
+  /* =========================
+     HANDLE CHANGE
+  ========================= */
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
     if (name === "image") {
-      setEventData({ ...eventData, image: files[0] });
+      const file = files[0];
+      setEventData({ ...eventData, image: file });
+
+      if (file) {
+        setPreview(URL.createObjectURL(file));
+      }
     } else {
       setEventData({ ...eventData, [name]: value });
     }
   };
 
-  // ✅ Submit handler
+  /* =========================
+     SUBMIT
+  ========================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -68,30 +82,23 @@ const CreateEvent = () => {
     try {
       let res;
 
-      // ✅ EDIT
       if (isEdit && editEvent?._id) {
         res = await api.put(`/events/${editEvent._id}`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-      }
-      // ✅ CREATE
-      else {
+      } else {
         res = await api.post(`/events/create`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       }
 
-      if (res.status === 200 || res.status === 201) {
-        toast.success(
-          isEdit
-            ? "✅ Event updated successfully!"
-            : "🎉 Event created successfully!"
-        );
+      toast.success(
+        isEdit ? "✅ Event updated!" : "🎉 Event created!",
+        { autoClose: 1200 }
+      );
 
-        setTimeout(() => navigate("/admin"), 1200);
-      }
+      setTimeout(() => navigate("/admin"), 1200);
     } catch (error) {
-      console.error(error);
       toast.error("❌ Failed to save event");
     } finally {
       setLoading(false);
@@ -122,27 +129,8 @@ const CreateEvent = () => {
         />
 
         <div className="form-row">
-          <div>
-            <label>Date</label>
-            <input
-              type="date"
-              name="date"
-              value={eventData.date}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div>
-            <label>Time</label>
-            <input
-              type="time"
-              name="time"
-              value={eventData.time}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <input type="date" name="date" value={eventData.date} onChange={handleChange} required />
+          <input type="time" name="time" value={eventData.time} onChange={handleChange} required />
         </div>
 
         <label>Category</label>
@@ -169,22 +157,36 @@ const CreateEvent = () => {
         />
 
         <label>Event Image</label>
-        <input type="file" name="image" onChange={handleChange} />
+        <input type="file" name="image" accept="image/*" onChange={handleChange} />
 
-        {isEdit && editEvent?.image && (
+        {/* IMAGE PREVIEW */}
+        {preview && (
           <img
-            src={editEvent.image}
+            src={preview}
             alt="preview"
-            style={{ width: 200, marginTop: 10 }}
+            style={{
+              width: 200,
+              marginTop: 10,
+              borderRadius: 8,
+              objectFit: "cover",
+            }}
           />
         )}
 
         <div className="button-group">
-          <button type="submit" disabled={loading}>
-            {loading ? "Saving..." : isEdit ? "Update Event" : "Create Event"}
+          <button
+            type="submit"
+            className={`create-btn ${loading ? "loading-btn" : ""}`}
+            disabled={loading}
+          >
+            {loading ? "" : isEdit ? "Update Event" : "Create Event"}
           </button>
 
-          <button type="button" onClick={() => navigate("/admin")}>
+          <button
+            type="button"
+            className="cancel-btnc"
+            onClick={() => navigate("/admin")}
+          >
             Cancel
           </button>
         </div>
