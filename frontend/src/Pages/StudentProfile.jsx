@@ -1,3 +1,4 @@
+// src/Pages/StudentProfile.jsx
 import React, { useEffect, useState } from "react";
 import StudentLayout from "./StudentLayout";
 import "../Styles/StudentProfile.css";
@@ -6,7 +7,7 @@ import {
   FaUniversity,
   FaUserEdit,
 } from "react-icons/fa";
-import api from "../config/axios"; // ✅ ONLY ADDED
+import api from "../config/axios"; // ✅ added axios instance
 
 const StudentProfile = () => {
   const [student, setStudent] = useState(null);
@@ -19,6 +20,7 @@ const StudentProfile = () => {
     college: "",
   });
 
+  /* ================= LOAD USER + REGISTRATIONS ================= */
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -29,12 +31,8 @@ const StudentProfile = () => {
 
     const getRegs = async () => {
       try {
-        /* =====================================================
-           ✅ ONLY CHANGED → axios instead of fetch
-        ===================================================== */
-        const res = await api.get(`/registrations/student/${user.email}`);
-        const data = res.data;
-
+        // ✅ converted to axios
+        const { data } = await api.get(`/registrations/student/${user.email}`);
         setRegistrations(data.registrations || []);
       } catch {
         setRegistrations([]);
@@ -44,11 +42,13 @@ const StudentProfile = () => {
     if (user?.email) getRegs();
   }, []);
 
+  /* ================= FILTER ================= */
   const filtered =
     activeTab === "All"
       ? registrations
       : registrations.filter((r) => r.status === activeTab);
 
+  /* ================= SAVE PROFILE ================= */
   const saveProfile = () => {
     localStorage.setItem("user", JSON.stringify(editData));
     setStudent(editData);
@@ -56,8 +56,10 @@ const StudentProfile = () => {
     setEditOpen(false);
   };
 
+  /* ================= LOADING ================= */
   if (!student) return <h2>Loading...</h2>;
 
+  /* ================= UI ================= */
   return (
     <StudentLayout>
       <div className="profile-page">
@@ -90,14 +92,17 @@ const StudentProfile = () => {
             <h3>{registrations.length}</h3>
             <p>Total Events</p>
           </div>
+
           <div className="stat-box">
             <h3>{registrations.filter((r) => r.status === "Approved").length}</h3>
             <p>Approved</p>
           </div>
+
           <div className="stat-box">
             <h3>{registrations.filter((r) => r.status === "Pending").length}</h3>
             <p>Pending</p>
           </div>
+
           <div className="stat-box">
             <h3>{registrations.filter((r) => r.status === "Rejected").length}</h3>
             <p>Rejected</p>
@@ -141,7 +146,9 @@ const StudentProfile = () => {
                     <span>⏰ {r.eventId?.time || "TBA"}</span>
                   </div>
 
-                  <span className={`status-chip status-${r.status.toLowerCase()}`}>
+                  <span
+                    className={`status-chip status-${r.status.toLowerCase()}`}
+                  >
                     {r.status}
                   </span>
                 </div>
@@ -185,7 +192,11 @@ const StudentProfile = () => {
                 <button className="save-btn" onClick={saveProfile}>
                   Save
                 </button>
-                <button className="cancel-btn" onClick={() => setEditOpen(false)}>
+
+                <button
+                  className="cancel-btn"
+                  onClick={() => setEditOpen(false)}
+                >
                   Cancel
                 </button>
               </div>
