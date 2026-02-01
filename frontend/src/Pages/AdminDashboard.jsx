@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import "../Styles/AdminDashboard.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import AdminLayout from "./AdminLayout";
-import api from "../config/axios"
+import api from "../config/axios"; // ✅ ONLY ADDED
+
 const AdminDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [stats, setStats] = useState({
@@ -32,8 +33,10 @@ const AdminDashboard = () => {
 
     const fetchStats = async () => {
       try {
+        // ✅ ONLY CHANGED
         const res = await api.get("/admin/stats");
-        const data = await res.json();
+        const data = res.data;
+
         setStats({
           totalEvents: Number(data?.totalEvents) || 0,
           activeEvents: Number(data?.activeEvents) || 0,
@@ -47,8 +50,10 @@ const AdminDashboard = () => {
 
     const fetchActivity = async () => {
       try {
+        // ✅ ONLY CHANGED
         const res = await api.get("/admin/activity");
-        const data = await res.json();
+        const data = res.data;
+
         setActivities(data);
       } catch (error) {
         console.error("Error fetching activity:", error);
@@ -68,15 +73,16 @@ const AdminDashboard = () => {
       sidebarOpen={sidebarOpen}
       toggleSidebar={toggleSidebar}
     >
-
-      <main >
+      <main>
         {/* Header */}
         <section className="modern-header">
           <div className="welcome-text">
             <h2>
               {getGreeting()}, <span>{user.fullName}</span> 👋
             </h2>
-            <p>Welcome back to your admin dashboard. Here's your quick summary.</p>
+            <p>
+              Welcome back to your admin dashboard. Here's your quick summary.
+            </p>
           </div>
           <div className="create-btn-container">
             <button
@@ -88,7 +94,7 @@ const AdminDashboard = () => {
           </div>
         </section>
 
-        {/* ✅ Stats Section */}
+        {/* Stats Section */}
         <div className="stats-grid">
           <div className="card">
             <p>Total Events</p>
@@ -112,7 +118,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* ✅ Recent Activity + Quick Actions */}
+        {/* Recent Activity + Quick Actions */}
         <div className="panel-container">
           <div className="panel">
             <h3>Recent Activity</h3>
@@ -142,7 +148,7 @@ const AdminDashboard = () => {
             </table>
           </div>
 
-          {/* ✅ Quick Actions */}
+          {/* Quick Actions */}
           <div className="panel quick-actions">
             <h3>Quick Actions</h3>
             <div className="action-buttons">
