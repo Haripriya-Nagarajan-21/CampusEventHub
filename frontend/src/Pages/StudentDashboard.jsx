@@ -1,10 +1,13 @@
 // src/pages/StudentDashboard.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../Styles/StudentDashboard.css";
-import { FaClock, FaCheckCircle } from "react-icons/fa";
+import {
+  FaClock,
+  FaCheckCircle
+} from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import StudentLayout from "./StudentLayout";
-import api from "../config/axios"; // ✅ USE GLOBAL API
+import api from "../config/axios"; // ✅ ONLY ADDED
 
 const StudentDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -14,34 +17,39 @@ const StudentDashboard = () => {
 
   const [regPage, setRegPage] = useState(1);
   const [upPage, setUpPage] = useState(1);
-
   const ITEMS_PER_PAGE = 3;
 
   const navigate = useNavigate();
   const location = useLocation();
+  const profileRef = useRef(null);
 
-  /* ================= LOAD USER ================= */
+  /* ================= LOAD STUDENT ================= */
   useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (!stored) return navigate("/login");
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (!storedUser) return navigate("/login");
 
-    const parsed = JSON.parse(stored);
-    if (!parsed?.email) return navigate("/login");
+      const parsedUser = JSON.parse(storedUser);
+      if (!parsedUser?.email) return navigate("/login");
 
-    setStudent(parsed);
+      setStudent(parsedUser);
+    } catch {
+      localStorage.removeItem("user");
+      navigate("/login");
+    }
   }, [navigate]);
 
   /* ================= FETCH EVENTS ================= */
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const { data } = await api.get("/events/all"); // ✅ FIXED
+        const res = await api.get("/events/all"); // ✅ changed
+        const data = res.data;
         setEvents(Array.isArray(data) ? data : data.events || []);
       } catch {
         setEvents([]);
       }
     };
-
     fetchEvents();
   }, []);
 
@@ -51,15 +59,12 @@ const StudentDashboard = () => {
 
     const fetchRegs = async () => {
       try {
-        const { data } = await api.get(
-          `/registrations/student/${student.email}` // ✅ FIXED
-        );
-
+        const res = await api.get(`/registrations/student/${student.email}`); // ✅ changed
+        const data = res.data;
         const regs = data.registrations || data || [];
 
         regs.sort(
-          (a, b) =>
-            new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+          (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
         );
 
         setRegistrations(regs);
@@ -77,11 +82,14 @@ const StudentDashboard = () => {
 
     const interval = setInterval(async () => {
       try {
-        const { data } = await api.get(
-          `/registrations/student/${student.email}` // ✅ FIXED
+        const res = await api.get(`/registrations/student/${student.email}`); // ✅ changed
+        const data = res.data;
+
+        const sorted = (data.registrations || data || []).sort(
+          (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
         );
 
-        setRegistrations(data.registrations || data || []);
+        setRegistrations(sorted);
       } catch {}
     }, 10000);
 
@@ -91,83 +99,92 @@ const StudentDashboard = () => {
   /* ================= HELPERS ================= */
   const isRegistered = (eventId) =>
     registrations.some(
-      (r) => r.eventId?._id === eventId || r.eventId === eventId
+      (r) => r?.eventId && (r.eventId._id === eventId || r.eventId === eventId)
     );
 
   const upcomingEvents = events
     .filter(
       (ev) =>
         ev?.date &&
-        new Date(ev.date) >= new Date()
+        new Date(ev.date).setHours(0, 0, 0, 0) >=
+          new Date().setHours(0, 0, 0, 0)
     )
     .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-  const regPaginated = registrations.slice(
-    (regPage - 1) * ITEMS_PER_PAGE,
-    regPage * ITEMS_PER_PAGE
-  );
 
   const upPaginated = upcomingEvents.slice(
     (upPage - 1) * ITEMS_PER_PAGE,
     upPage * ITEMS_PER_PAGE
   );
 
-  if (!student) return <h2>Loading...</h2>;
+  const regPaginated = registrations.slice(
+    (regPage - 1) * ITEMS_PER_PAGE,
+    regPage * ITEMS_PER_PAGE
+  );
+
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+
+  if (!student) return <div className="loading-screen"><h2>Loading...</h2></div>;
 
   return (
     <StudentLayout
       currentPath={location.pathname}
       onNavigate={(p) => navigate(p)}
       sidebarOpen={sidebarOpen}
-      toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+      toggleSidebar={toggleSidebar}
     >
-      {/* ================= HEADER ================= */}
-      <div className="dashboard-header">
-        <h2>Welcome, {student.fullName} 👋</h2>
-      </div>
 
-      {/* ================= MY REGISTRATIONS ================= */}
-      <section>
-        <h3>My Registrations</h3>
+      {/* ================= SAME UI BELOW ================= */}
 
-        {regPaginated.map((r) => (
-          <div key={r._id} className="event-card">
-            <h4>{r.eventId?.title}</h4>
-            {r.status === "Approved" ? (
-              <span className="approved">
-                <FaCheckCircle /> Approved
-              </span>
-            ) : (
-              <span className="pending">
-                <FaClock /> Pending
-              </span>
-            )}
-          </div>
-        ))}
+      <section className="registrations-section">
+        <h2>My Registrations</h2>
+
+        <div className="registrations-grid">
+          {regPaginated.map((r) => (
+            <div key={r._id} className="event-card">
+              <img src={r.eventId?.image} alt="" />
+              <div className="event-info">
+                <h3>{r.eventId?.title}</h3>
+                <p>📅 {new Date(r.eventId?.date).toLocaleDateString()}</p>
+                <p>🕒 {r.eventId?.time || "TBD"}</p>
+
+                {r.status === "Approved" ? (
+                  <span className="approved"><FaCheckCircle /> Approved</span>
+                ) : (
+                  <span className="pending"><FaClock /> Pending</span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
-      {/* ================= UPCOMING EVENTS ================= */}
-      <section>
-        <h3>Upcoming Events</h3>
+      <section className="upcoming-section">
+        <h2>Upcoming Events</h2>
 
-        {upPaginated.map((event) => (
-          <div key={event._id} className="event-card">
-            <h4>{event.title}</h4>
+        <div className="upcoming-grid">
+          {upPaginated.map((event) => (
+            <div key={event._id} className="upcoming-card">
+              <img src={event.image} alt="" />
+              <div className="event-info">
+                <h3>{event.title}</h3>
 
-            {isRegistered(event._id) ? (
-              <button disabled>Registered</button>
-            ) : (
-              <button
-                onClick={() =>
-                  navigate("/event-registration", { state: { event } })
-                }
-              >
-                Register
-              </button>
-            )}
-          </div>
-        ))}
+                {isRegistered(event._id) ? (
+                  <button disabled>Registered</button>
+                ) : (
+                  <button
+                    onClick={() =>
+                      navigate("/event-registration", { state: { event } })
+                    }
+                  >
+                    Register Now
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
+
     </StudentLayout>
   );
 };
