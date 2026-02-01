@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../config/axios"; // ✅ CHANGED (use axios instance)
 import "../Styles/ForgotPassword.css";
 import forgotPasswordIllustration from "../assets/Forgot password-pana 1.svg";
 import { notifyError, notifySuccess } from "../utils/toast";
+import api from "../config/axios"; // ✅ ONLY ADDED (axios instance)
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +14,10 @@ const ForgotPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // setError("");
+    // setMessage("");
 
+    // ✅ Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!email) {
@@ -30,11 +33,15 @@ const ForgotPassword = () => {
     setIsLoading(true);
 
     try {
-      // ✅ ONLY THIS LINE CHANGED
-      const { data } = await api.post("/auth/forgot-password", { email });
+      // ✅ CHANGED → using api instance instead of axios + localhost
+      const { data } = await api.post("/auth/forgot-password", {
+        email,
+      });
 
       notifySuccess(`Verification code sent to ${email}`);
+
       navigate("/verify-otp", { state: { email } });
+
     } catch (err) {
       notifyError(
         err.response?.data?.message || "An error occurred. Please try again."
@@ -50,9 +57,13 @@ const ForgotPassword = () => {
 
   return (
     <div className="forgot-password-wrapper">
+
+      {/* Left Section - Form */}
       <div className="forgot-password-left">
         <div className="forgot-password-form">
+
           <h2>Forgot Password</h2>
+
           <p className="forgot-password-subtitle">
             Enter your email for the verification process. We'll send a 4-digit
             code to your email.
@@ -88,15 +99,18 @@ const ForgotPassword = () => {
             </svg>
             Back to Login
           </button>
+
         </div>
       </div>
 
+      {/* Right Section - Illustration */}
       <div className="forgot-password-right">
         <img
           src={forgotPasswordIllustration}
           alt="Forgot Password Illustration"
         />
       </div>
+
     </div>
   );
 };
