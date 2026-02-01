@@ -4,7 +4,7 @@ import AdminLayout from "../Pages/AdminLayout";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import api from "../config/axios"; // ✅ ONLY ADD
+import api from "../config/axios"; // ✅ ONLY ADDED (axios instance)
 
 const RegistrationsPage = () => {
   const [registrations, setRegistrations] = useState([]);
@@ -16,8 +16,8 @@ const RegistrationsPage = () => {
   }, [location.pathname]);
 
   /* =====================================================
-     ✅ ONLY CHANGED → axios instance
-  ===================================================== */
+     ✅ ONLY CHANGED → using api instead of fetch
+  ====================================================== */
   const fetchRegistrations = async () => {
     try {
       const res = await api.get("/registrations"); // ✅ changed
@@ -30,8 +30,8 @@ const RegistrationsPage = () => {
   };
 
   /* =====================================================
-     ✅ ONLY CHANGED → axios instance
-  ===================================================== */
+     ✅ ONLY CHANGED → using api instead of fetch
+  ====================================================== */
   const updateStatus = async (id, status) => {
     try {
       const res = await api.put(`/registrations/${id}/status`, { status }); // ✅ changed
@@ -103,7 +103,9 @@ const RegistrationsPage = () => {
           </div>
         </div>
 
-        {/* ================= TABLE ================= */}
+        {/* =====================================================
+                📋 REGISTRATIONS TABLE
+        ====================================================== */}
         <h3>Registrations</h3>
 
         <div className="table-wrapper">
@@ -160,6 +162,7 @@ const RegistrationsPage = () => {
             </tbody>
           </table>
         </div>
+
       </div>
 
       <ToastContainer theme="colored" position="top-right" autoClose={2500} />
