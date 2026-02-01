@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../Styles/AdminDashboard.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import AdminLayout from "./AdminLayout";
-import api from "../config/axios"; // ✅ USE AXIOS INSTANCE
+import api from "../config/axios"; // only change
 
 const AdminDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -31,11 +31,11 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-
     if (storedUser) setUser(storedUser);
     else navigate("/login");
 
-    // ✅ FETCH STATS USING API
+    /* ✅ ONLY API CHANGED */
+
     const fetchStats = async () => {
       try {
         const res = await api.get("/admin/stats");
@@ -47,18 +47,17 @@ const AdminDashboard = () => {
           totalRegistrations: Number(data?.totalRegistrations) || 0,
           pendingApprovals: Number(data?.pendingApprovals) || 0,
         });
-      } catch (error) {
-        console.error("Error fetching stats:", error);
+      } catch (err) {
+        console.error(err);
       }
     };
 
-    // ✅ FETCH ACTIVITY USING API
     const fetchActivity = async () => {
       try {
         const res = await api.get("/admin/activity");
         setActivities(res.data);
-      } catch (error) {
-        console.error("Error fetching activity:", error);
+      } catch (err) {
+        console.error(err);
       }
     };
 
@@ -76,7 +75,8 @@ const AdminDashboard = () => {
       toggleSidebar={toggleSidebar}
     >
       <main>
-        {/* Header */}
+
+        {/* HEADER (unchanged) */}
         <section className="modern-header">
           <div className="welcome-text">
             <h2>
@@ -95,31 +95,37 @@ const AdminDashboard = () => {
           </div>
         </section>
 
-        {/* Stats */}
+        {/* STATS (unchanged structure) */}
         <div className="stats-grid">
           <div className="card">
             <p>Total Events</p>
             <h2>{stats.totalEvents}</h2>
+            <h5>All time events created</h5>
           </div>
 
           <div className="card">
             <p>Active Events</p>
             <h2>{stats.activeEvents}</h2>
+            <h5>Currently open for registration</h5>
           </div>
 
           <div className="card">
             <p>Total Registrations</p>
             <h2>{stats.totalRegistrations}</h2>
+            <h5>Across all events</h5>
           </div>
 
           <div className="card">
             <p>Pending Approvals</p>
             <h2>{stats.pendingApprovals}</h2>
+            <h5>Awaiting admin review</h5>
           </div>
         </div>
 
-        {/* Activity */}
+        {/* PANEL CONTAINER (keep for CSS) */}
         <div className="panel-container">
+
+          {/* Activity Panel */}
           <div className="panel">
             <h3>Recent Activity</h3>
 
@@ -135,7 +141,7 @@ const AdminDashboard = () => {
               <tbody>
                 {activities.length > 0 ? (
                   activities.map((act, i) => (
-                    <tr key={act._id || i}>
+                    <tr key={i}>
                       <td>{act.eventName}</td>
                       <td>{act.action}</td>
                       <td>{new Date(act.timestamp).toLocaleString()}</td>
@@ -149,6 +155,35 @@ const AdminDashboard = () => {
               </tbody>
             </table>
           </div>
+
+          {/* QUICK ACTIONS (restore old section) */}
+          <div className="panel quick-actions">
+            <h3>Quick Actions</h3>
+
+            <div className="action-buttons">
+              <button
+                className="blue-btn"
+                onClick={() => navigate("/create-event")}
+              >
+                + Create New Event
+              </button>
+
+              <button
+                className="gray-btn"
+                onClick={() => navigate("/admin/registrations")}
+              >
+                Review Approvals
+              </button>
+
+              <button
+                className="gray-btn"
+                onClick={() => navigate("/admin/events")}
+              >
+                Active Events
+              </button>
+            </div>
+          </div>
+
         </div>
       </main>
     </AdminLayout>
