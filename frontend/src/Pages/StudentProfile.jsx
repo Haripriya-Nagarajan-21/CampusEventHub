@@ -7,46 +7,63 @@ import {
   FaUserEdit,
 } from "react-icons/fa";
 
+import api from "../config/axios"; // ✅ USE GLOBAL API
+
 const StudentProfile = () => {
   const [student, setStudent] = useState(null);
   const [registrations, setRegistrations] = useState([]);
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState("All");
   const [editOpen, setEditOpen] = useState(false);
+
   const [editData, setEditData] = useState({
     fullName: "",
     email: "",
     college: "",
   });
 
+  /* =========================
+     LOAD USER + REGISTRATIONS
+  ========================= */
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      setStudent(user);
-      setEditData(user);
-    }
+
+    if (!user) return;
+
+    setStudent(user);
+    setEditData(user);
 
     const getRegs = async () => {
-      const res = await fetch(
-        `http://localhost:5000/api/registrations/student/${user.email}`
-      );
-      const data = await res.json();
-      setRegistrations(data.registrations || []);
+      try {
+        // ✅ FIXED HERE
+        const { data } = await api.get(
+          `/registrations/student/${user.email}`
+        );
+
+        setRegistrations(data.registrations || []);
+      } catch {
+        setRegistrations([]);
+      }
     };
 
     getRegs();
   }, []);
 
+  /* =========================
+     FILTER REGISTRATIONS
+  ========================= */
   const filtered =
     activeTab === "All"
       ? registrations
       : registrations.filter((r) => r.status === activeTab);
 
- const saveProfile = () => {
-  localStorage.setItem("user", JSON.stringify(editData));
-  setStudent(editData);
-  window.dispatchEvent(new Event("storage"));
-  setEditOpen(false);
-};
+  /* =========================
+     SAVE PROFILE
+  ========================= */
+  const saveProfile = () => {
+    localStorage.setItem("user", JSON.stringify(editData));
+    setStudent(editData);
+    setEditOpen(false);
+  };
 
   if (!student) return <h2>Loading...</h2>;
 
@@ -133,10 +150,7 @@ const StudentProfile = () => {
                     <span>⏰ {r.eventId?.time || "TBA"}</span>
                   </div>
 
-                  {/* STATUS CHIP */}
-                  <span
-                    className={`status-chip status-${r.status.toLowerCase()}`}
-                  >
+                  <span className={`status-chip status-${r.status.toLowerCase()}`}>
                     {r.status}
                   </span>
                 </div>
@@ -184,6 +198,7 @@ const StudentProfile = () => {
                   Cancel
                 </button>
               </div>
+
             </div>
           </div>
         )}
