@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../Styles/VerifyOtp.css";
 import otpIllustration from "../assets/Forgot password-pana 1.svg";
 import { notifyError, notifyInfo, notifySuccess } from "../utils/toast";
-
+import api from "../config/axios"; // ✅ USE GLOBAL API
 
 const VerifyOtp = () => {
   const { state } = useLocation();
@@ -17,24 +16,24 @@ const VerifyOtp = () => {
 
   const inputRefs = useRef([]);
 
-  // Countdown timer
+  /* ================= TIMER ================= */
   useEffect(() => {
     const countdown = setInterval(() => {
       setTimer((t) => (t > 0 ? t - 1 : 0));
     }, 1000);
+
     return () => clearInterval(countdown);
   }, []);
 
-  // Auto-focus input handling
+  /* ================= INPUT HANDLING ================= */
   const handleChange = (value, index) => {
-    if (!/^\d*$/.test(value)) return; // Only digits
+    if (!/^\d*$/.test(value)) return;
+
     const newOtp = [...otp];
     newOtp[index] = value.slice(-1);
     setOtp(newOtp);
 
-    if (value && index < otp.length - 1) {
-      inputRefs.current[index + 1].focus();
-    }
+    if (value && index < 3) inputRefs.current[index + 1].focus();
   };
 
   const handleKeyDown = (e, index) => {
@@ -43,68 +42,61 @@ const VerifyOtp = () => {
     }
   };
 
-  // Submit OTP
+  /* ================= VERIFY OTP ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const code = otp.join("").trim();
 
-    if (!email) {
-      notifyError("Email not found. Please go back.");
-      return;
-    }
-
-    if (code.length !== 4) {
-      notifyInfo("Enter the 4-digit code.");
-      return;
-    }
+    if (!email) return notifyError("Email not found. Please go back.");
+    if (code.length !== 4) return notifyInfo("Enter the 4-digit code.");
 
     try {
-      console.log("Sending OTP:", code, "to backend for email:", email);
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/verify-otp",
-        { email, code }
-      );
+      // ✅ FIXED HERE
+      await api.post("/auth/verify-otp", { email, code });
+
       localStorage.setItem("resetEmail", email);
+
       notifySuccess("OTP verified successfully!");
       navigate("/reset-password");
     } catch (err) {
-      console.error(err.response?.data);
       notifyError(err.response?.data?.message || "Invalid OTP");
     }
   };
 
-  // Resend OTP
+  /* ================= RESEND OTP ================= */
   const handleResend = async () => {
     if (!email) return;
+
     setIsResending(true);
+
     try {
-      await axios.post("http://localhost:5000/api/auth/forgot-password", {
-        email,
-      });
+      // ✅ FIXED HERE
+      await api.post("/auth/forgot-password", { email });
+
       notifySuccess("OTP resent to your email");
+
       setTimer(30);
-      setOtp(["", "", "", ""]); // clear inputs
-      inputRefs.current[0].focus();
-    } catch (err) {
-      console.error(err.response?.data);
-      notifyError("Failed to resend OTP. Try again later.");
+      setOtp(["", "", "", ""]);
+      inputRefs.current[0]?.focus();
+    } catch {
+      notifyError("Failed to resend OTP");
     } finally {
       setIsResending(false);
     }
   };
 
-  const handleBack = () => {
-    navigate("/forgot-password");
-  };
+  const handleBack = () => navigate("/forgot-password");
 
+  /* ================= UI ================= */
   return (
     <div className="verify-wrapper">
-      {/* Left Section - Form */}
+      {/* LEFT */}
       <div className="verify-left">
         <div className="verify-form">
           <h2>Verification</h2>
           <p className="verify-subtitle">
-            Enter your 4-digit code that you received on your email.
+            Enter your 4-digit code sent to your email.
           </p>
 
           <form onSubmit={handleSubmit}>
@@ -128,9 +120,8 @@ const VerifyOtp = () => {
             <button type="submit">Continue</button>
           </form>
 
-      
           <p className="resend">
-            If you didn't receive a code?{" "}
+            Didn't receive code?{" "}
             <span
               onClick={timer === 0 && !isResending ? handleResend : undefined}
               className={`resend-link ${timer > 0 ? "disabled" : ""}`}
@@ -140,21 +131,12 @@ const VerifyOtp = () => {
           </p>
 
           <button onClick={handleBack} className="back-button">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path
-                d="M12.5 15L7.5 10L12.5 5"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Back
+            ← Back
           </button>
         </div>
       </div>
 
-      {/* Right Section - Illustration */}
+      {/* RIGHT */}
       <div className="verify-right">
         <img src={otpIllustration} alt="Verification" />
       </div>
