@@ -3,45 +3,44 @@ import "../Styles/Registrations.css";
 import AdminLayout from "../Pages/AdminLayout";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import api from "../config/axios"; // ✅ IMPORTANT
 
 const RegistrationsPage = () => {
   const [registrations, setRegistrations] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
+  /* =====================================================
+     ✅ FETCH REGISTRATIONS (FIXED)
+  ===================================================== */
   useEffect(() => {
     fetchRegistrations();
   }, [location.pathname]);
 
   const fetchRegistrations = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/registrations");
-      const data = await res.json();
-      setRegistrations(data.registrations || data || []);
+      const res = await api.get("/registrations"); // ✅ FIXED
+      setRegistrations(res.data.registrations || res.data || []);
     } catch (error) {
       console.error("Error fetching registrations:", error);
       setRegistrations([]);
     }
   };
 
+  /* =====================================================
+     ✅ UPDATE STATUS (FIXED)
+  ===================================================== */
   const updateStatus = async (id, status) => {
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/registrations/${id}/status`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status }),
-        }
-      );
-      const data = await res.json();
+      const res = await api.put(`/registrations/${id}/status`, { status }); // ✅ FIXED
+      const data = res.data;
 
       if (data.success) {
         fetchRegistrations();
+
         if (status === "Approved") {
           toast.success("Registration approved successfully!");
-        } else if (status === "Rejected") {
+        } else {
           toast.error("❌ Registration rejected!");
         }
       } else {
@@ -53,7 +52,9 @@ const RegistrationsPage = () => {
     }
   };
 
-  
+  /* =====================================================
+     ANALYTICS
+  ===================================================== */
   const analytics = useMemo(() => {
     const total = registrations.length;
     const approved = registrations.filter((r) => r.status === "Approved").length;
@@ -65,14 +66,15 @@ const RegistrationsPage = () => {
     return { total, approved, pending, rejected, approvalRate };
   }, [registrations]);
 
+  /* ===================================================== */
+
   return (
     <AdminLayout
       currentPath={location.pathname}
       onNavigate={(p) => navigate(p)}
     >
       <div className="panels">
-
-        
+        {/* Analytics */}
         <h3>Registration Analytics</h3>
 
         <div className="analytics-container">
@@ -102,10 +104,9 @@ const RegistrationsPage = () => {
           </div>
         </div>
 
-        {/* =====================================================
-                📋 REGISTRATIONS TABLE
-        ====================================================== */}
+        {/* Table */}
         <h3>Registrations</h3>
+
         <div className="table-wrapper">
           <table className="registrations-table">
             <thead>
@@ -132,14 +133,18 @@ const RegistrationsPage = () => {
                         <div className="action-buttons">
                           <button
                             className="approve-btn"
-                            onClick={() => updateStatus(reg._id, "Approved")}
+                            onClick={() =>
+                              updateStatus(reg._id, "Approved")
+                            }
                           >
                             Approve
                           </button>
 
                           <button
                             className="reject-btn"
-                            onClick={() => updateStatus(reg._id, "Rejected")}
+                            onClick={() =>
+                              updateStatus(reg._id, "Rejected")
+                            }
                           >
                             Reject
                           </button>
