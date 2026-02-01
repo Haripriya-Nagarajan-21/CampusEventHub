@@ -3,7 +3,7 @@ import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import "../Styles/EventsPage.css";
 import AdminLayout from "../Pages/AdminLayout";
 import StudentLayout from "./StudentLayout";
-import api from "../config/axios"; // ✅ ONLY ADD
+import api from "../config/axios"; // ✅ ONLY ADDED
 
 import {
   FaBars,
@@ -28,11 +28,8 @@ const EventsPage = ({ userRole = "student" }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [student, setStudent] = useState(null);
-
   const navigate = useNavigate();
   const location = useLocation();
-
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const categories = ["All", "This Week", "Technical", "Sports", "Workshop", "Cultural"];
   const [activeCategory, setActiveCategory] = useState("All");
@@ -45,28 +42,44 @@ const EventsPage = ({ userRole = "student" }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
+  const [regSearch, setRegSearch] = useState("");
+  const [regPage, setRegPage] = useState(1);
+  const REGS_PER_PAGE = 8;
+
   const modalRef = useRef(null);
 
-  /* =====================================================
-     ✅ FETCH EVENTS (ONLY changed to axios)
-  ===================================================== */
+  /* ================= LOAD STUDENT ================= */
+  useEffect(() => {
+    if (userRole === "student") {
+      try {
+        const storedUser = localStorage.getItem("user");
+        if (!storedUser) return navigate("/login");
+        const parsedUser = JSON.parse(storedUser);
+        if (!parsedUser?.email) return navigate("/login");
+        setStudent(parsedUser);
+      } catch {
+        navigate("/login");
+      }
+    }
+  }, [navigate, userRole]);
+
+  /* ================= FETCH EVENTS ================= */
   useEffect(() => {
     api
-      .get("/events/all")
-      .then((res) =>
-        Array.isArray(res.data) ? setEvents(res.data) : setEvents([])
-      )
+      .get("/events/all") // ✅ changed
+      .then((res) => {
+        const data = res.data;
+        setEvents(Array.isArray(data) ? data : []);
+      })
       .catch(() => setEvents([]));
   }, []);
 
-  /* =====================================================
-     ✅ FETCH STUDENT REGISTRATIONS (ONLY axios)
-  ===================================================== */
+  /* ================= FETCH STUDENT REGISTRATIONS ================= */
   useEffect(() => {
     if (!student?.email) return;
 
     api
-      .get(`/registrations/student/${student.email}`)
+      .get(`/registrations/student/${student.email}`) // ✅ changed
       .then((res) => {
         const data = res.data;
 
@@ -81,17 +94,15 @@ const EventsPage = ({ userRole = "student" }) => {
       .catch(() => setRegistrations([]));
   }, [student?.email]);
 
-  /* =====================================================
-     ✅ DELETE EVENT (ONLY axios)
-  ===================================================== */
+  /* ================= DELETE EVENT ================= */
   const handleDeleteEvent = async () => {
     const event = deleteTarget;
-    if (!event) return notifyError("No event selected");
+    if (!event) return;
 
     const id = event._id || event.id;
 
     try {
-      const res = await api.delete(`/events/${id}`);
+      const res = await api.delete(`/events/${id}`); // ✅ changed
       const data = res.data;
 
       if (data.success || data.message) {
@@ -100,7 +111,7 @@ const EventsPage = ({ userRole = "student" }) => {
         );
         notifySuccess("Event deleted successfully");
       } else {
-        notifyError(data.message || "Failed to delete event");
+        notifyError(data.message || "Failed to delete");
       }
     } catch {
       notifyError("Network error while deleting event");
@@ -110,16 +121,14 @@ const EventsPage = ({ userRole = "student" }) => {
     }
   };
 
-  /* =====================================================
-     ✅ VIEW REGISTRATIONS (ONLY axios)
-  ===================================================== */
+  /* ================= VIEW REGISTRATIONS (ADMIN) ================= */
   const handleViewRegistrations = async (event) => {
     setSelectedEvent(event);
     setShowRegsModal(true);
     setRegsLoading(true);
 
     try {
-      const res = await api.get("/registrations");
+      const res = await api.get("/registrations"); // ✅ changed
       const data = res.data;
 
       const allRegs = data.registrations || data || [];
@@ -139,92 +148,84 @@ const EventsPage = ({ userRole = "student" }) => {
     }
   };
 
-  /* =====================================================
-     EVERYTHING BELOW = 100% YOUR ORIGINAL UI
-     (NOT MODIFIED AT ALL)
-  ===================================================== */
-
-  const filteredEvents = useMemo(() => {
-    return events
-      .filter((event) =>
-        (event.title || "").toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      .sort((a, b) =>
-        sortOrder === "asc"
-          ? new Date(a.date) - new Date(b.date)
-          : new Date(b.date) - new Date(a.date)
+  /* ================= FILTER EVENTS ================= */
+  const filteredEvents = events
+    .filter((event) => {
+      const term = searchTerm.toLowerCase();
+      return (
+        (event.title || "").toLowerCase().includes(term) ||
+        (event.category || "").toLowerCase().includes(term)
       );
-  }, [events, searchTerm, sortOrder]);
+    })
+    .sort((a, b) =>
+      sortOrder === "asc"
+        ? new Date(a.date) - new Date(b.date)
+        : new Date(b.date) - new Date(a.date)
+    );
 
+  /* ================= ADMIN VIEW ================= */
   if (userRole === "admin") {
     return (
-      <AdminLayout currentPath={location.pathname} onNavigate={(p) => navigate(p)}>
-        <div className="events-page-student">
-          <div className="events-grid">
-            {filteredEvents.map((event) => (
-              <div key={event._id || event.id} className="event-card">
+      <AdminLayout
+        currentPath={location.pathname}
+        onNavigate={(p) => navigate(p)}
+      >
+        <div className="events-grid">
+          {filteredEvents.map((event) => (
+            <div key={event._id} className="event-card">
+              <img src={event.image} alt="" />
+
+              <div className="event-info">
                 <h3>{event.title}</h3>
-                <p>{event.date}</p>
 
                 <div className="btn-group">
-                  <button
-                    className="icon-btn"
-                    onClick={() =>
-                      navigate("/create-event", {
-                        state: { event, isEdit: true },
-                      })
-                    }
-                  >
-                    <FaEdit />
-                  </button>
-
-                  <button
-                    className="icon-btn"
-                    onClick={() => handleViewRegistrations(event)}
-                  >
+                  <button onClick={() => handleViewRegistrations(event)}>
                     <FaUsers />
                   </button>
 
-                  <button
-                    className="icon-btn delete-icon-btn"
-                    onClick={() => {
-                      setDeleteTarget(event);
-                      setShowDeleteModal(true);
-                    }}
-                  >
+                  <button onClick={() => setDeleteTarget(event)}>
                     <FaTrash />
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </AdminLayout>
     );
   }
 
+  /* ================= STUDENT VIEW ================= */
   return (
     <StudentLayout
       currentPath={location.pathname}
       onNavigate={(p) => navigate(p)}
     >
-      <div className="events-page-student">
-        <div className="events-grid">
-          {filteredEvents.map((event) => (
-            <div key={event._id || event.id} className="event-card">
-              <h3>{event.title}</h3>
-              <p>{event.date}</p>
+      <div className="events-grid">
+        {filteredEvents.map((event) => {
+          const registered = registrations.some(
+            (r) => r.eventId?._id === event._id
+          );
 
-              <button
-                onClick={() =>
-                  navigate("/event-registration", { state: { event } })
-                }
-              >
-                Register
-              </button>
+          return (
+            <div key={event._id} className="event-card">
+              <img src={event.image} alt="" />
+
+              <div className="event-info">
+                <h3>{event.title}</h3>
+
+                <button
+                  disabled={registered}
+                  onClick={() =>
+                    navigate("/event-registration", { state: { event } })
+                  }
+                >
+                  {registered ? "Registered" : "Register Now"}
+                </button>
+              </div>
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
     </StudentLayout>
   );
