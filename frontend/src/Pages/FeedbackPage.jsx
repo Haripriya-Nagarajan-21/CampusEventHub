@@ -34,14 +34,15 @@ const FeedbackPage = () => {
 
   const lockKey = `fb_lock_${eventId}_${user?.email}`;
 
-  /* =========== FETCH EVENT (axios only) =========== */
+  /* =========== FETCH EVENT =========== */
   useEffect(() => {
     if (!user) return navigate("/login");
 
     const fetchEvent = async () => {
       try {
-        const res = await api.get(`/events/${eventId}`); // ✅ axios
-        setEvent(res.data.event || res.data);
+        const res = await api.get(`/events/${eventId}`); // ✅ changed
+        const data = res.data;
+        setEvent(data.event || data);
       } catch {
         toast.error("Event not found ⚠️");
         setEvent(null);
@@ -53,7 +54,7 @@ const FeedbackPage = () => {
     fetchEvent();
   }, [eventId, navigate, user]);
 
-  /* =========== LOAD FEEDBACK & LOCK (axios only) =========== */
+  /* =========== LOAD FEEDBACK & LOCK =========== */
   useEffect(() => {
     if (!user?.email || !eventId) return;
 
@@ -61,7 +62,7 @@ const FeedbackPage = () => {
 
     const loadFeedback = async () => {
       try {
-        const res = await api.get("/feedback"); // ✅ axios
+        const res = await api.get("/feedback"); // ✅ changed
         const data = res.data;
 
         if (data.success) {
@@ -85,7 +86,7 @@ const FeedbackPage = () => {
     loadFeedback();
   }, [eventId, user?.email]);
 
-  /* =========== SUBMIT FEEDBACK (axios only) =========== */
+  /* =========== SUBMIT FEEDBACK =========== */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLocked) return;
@@ -95,10 +96,10 @@ const FeedbackPage = () => {
     }
 
     try {
-      const res = await api.post("/feedback", { // ✅ axios
+      const res = await api.post("/feedback", {
         ...formData,
         eventId,
-      });
+      }); // ✅ changed
 
       const data = res.data;
 
@@ -122,15 +123,17 @@ const FeedbackPage = () => {
     }
   };
 
-  /* ======== UI BELOW NOT MODIFIED ======== */
-
+  /* ======== LOADING STATE ======== */
   if (loading) return <h3 style={{ textAlign: "center" }}>Loading…</h3>;
 
   if (!event)
     return (
       <div className="feedback-wrapper">
         <h3>Event not found</h3>
-        <button className="back-btn" onClick={() => navigate("/student/registrations")}>
+        <button
+          className="back-btn"
+          onClick={() => navigate("/student/registrations")}
+        >
           Back
         </button>
       </div>
@@ -140,6 +143,7 @@ const FeedbackPage = () => {
     <div className="feedback-wrapper">
       <ToastContainer />
 
+      {/* THANK YOU CARD */}
       {showThankYou && (
         <div className="thank-you-overlay">
           <div className="thank-you-card">
@@ -150,6 +154,8 @@ const FeedbackPage = () => {
       )}
 
       <div className="feedback-card-container">
+
+        {/* LEFT SIDE */}
         <div className="feedback-left">
           <img
             src={
@@ -158,15 +164,20 @@ const FeedbackPage = () => {
             }
             alt="Event"
           />
+
           <h2>{event.title}</h2>
+
           {event.description && <p>{event.description}</p>}
+
           <div className="meta">
             <span>📅 {new Date(event.date).toLocaleDateString()}</span>
             <span>🕒 {event.time}</span>
           </div>
         </div>
 
+        {/* RIGHT SIDE FORM */}
         <form className="feedback-right" onSubmit={handleSubmit}>
+
           <h3>
             {isLocked
               ? "Feedback Locked"
@@ -186,7 +197,9 @@ const FeedbackPage = () => {
             {[1, 2, 3, 4, 5].map((s) => (
               <FaStar
                 key={s}
-                onClick={() => !isLocked && setFormData({ ...formData, rating: s })}
+                onClick={() =>
+                  !isLocked && setFormData({ ...formData, rating: s })
+                }
                 color={s <= formData.rating ? "#f59e0b" : "#ddd"}
                 style={{ cursor: isLocked ? "not-allowed" : "pointer" }}
               />
@@ -198,13 +211,18 @@ const FeedbackPage = () => {
             readOnly={isLocked}
             value={formData.comments}
             onChange={(e) =>
-              !isLocked && setFormData({ ...formData, comments: e.target.value })
+              !isLocked &&
+              setFormData({ ...formData, comments: e.target.value })
             }
             rows={5}
           ></textarea>
 
           <button disabled={isLocked} className="submit-btn">
-            {isLocked ? "Locked" : formData._id ? "Save Edit" : "Submit Feedback"}
+            {isLocked
+              ? "Locked"
+              : formData._id
+              ? "Save Edit"
+              : "Submit Feedback"}
           </button>
 
           <button
@@ -215,6 +233,7 @@ const FeedbackPage = () => {
             Back
           </button>
         </form>
+
       </div>
     </div>
   );
