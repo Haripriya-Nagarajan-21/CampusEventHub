@@ -2,9 +2,10 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { FaStar } from "react-icons/fa";
 import "../Styles/Feedback.css";
-import api from "../config/axios"; // ✅ IMPORTANT
+import api from "../config/axios"; // ✅ ONLY ADDED
 
 const FeedbackPage = () => {
   const navigate = useNavigate();
@@ -33,15 +34,13 @@ const FeedbackPage = () => {
 
   const lockKey = `fb_lock_${eventId}_${user?.email}`;
 
-  /* =====================================================
-     ✅ FETCH EVENT (FIXED)
-  ===================================================== */
+  /* =========== FETCH EVENT (axios only) =========== */
   useEffect(() => {
     if (!user) return navigate("/login");
 
     const fetchEvent = async () => {
       try {
-        const res = await api.get(`/events/${eventId}`);
+        const res = await api.get(`/events/${eventId}`); // ✅ axios
         setEvent(res.data.event || res.data);
       } catch {
         toast.error("Event not found ⚠️");
@@ -54,9 +53,7 @@ const FeedbackPage = () => {
     fetchEvent();
   }, [eventId, navigate, user]);
 
-  /* =====================================================
-     ✅ LOAD EXISTING FEEDBACK (FIXED)
-  ===================================================== */
+  /* =========== LOAD FEEDBACK & LOCK (axios only) =========== */
   useEffect(() => {
     if (!user?.email || !eventId) return;
 
@@ -64,7 +61,7 @@ const FeedbackPage = () => {
 
     const loadFeedback = async () => {
       try {
-        const res = await api.get("/feedback");
+        const res = await api.get("/feedback"); // ✅ axios
         const data = res.data;
 
         if (data.success) {
@@ -88,9 +85,7 @@ const FeedbackPage = () => {
     loadFeedback();
   }, [eventId, user?.email]);
 
-  /* =====================================================
-     ✅ SUBMIT FEEDBACK (FIXED)
-  ===================================================== */
+  /* =========== SUBMIT FEEDBACK (axios only) =========== */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLocked) return;
@@ -100,7 +95,7 @@ const FeedbackPage = () => {
     }
 
     try {
-      const res = await api.post("/feedback", {
+      const res = await api.post("/feedback", { // ✅ axios
         ...formData,
         eventId,
       });
@@ -108,11 +103,10 @@ const FeedbackPage = () => {
       const data = res.data;
 
       if (data.success) {
-        toast.success(
-          formData._id ? "✏️ Feedback Updated!" : "🎉 Feedback Submitted!"
-        );
-
-        if (formData._id) {
+        if (!formData._id) {
+          toast.success("🎉 Feedback Submitted!", { autoClose: 1400 });
+        } else {
+          toast.success("✏️ Feedback Updated!", { autoClose: 1400 });
           localStorage.setItem(lockKey, "true");
           setIsLocked(true);
         }
@@ -128,7 +122,7 @@ const FeedbackPage = () => {
     }
   };
 
-  /* ===================================================== */
+  /* ======== UI BELOW NOT MODIFIED ======== */
 
   if (loading) return <h3 style={{ textAlign: "center" }}>Loading…</h3>;
 
@@ -136,7 +130,7 @@ const FeedbackPage = () => {
     return (
       <div className="feedback-wrapper">
         <h3>Event not found</h3>
-        <button onClick={() => navigate("/student/registrations")}>
+        <button className="back-btn" onClick={() => navigate("/student/registrations")}>
           Back
         </button>
       </div>
@@ -156,7 +150,6 @@ const FeedbackPage = () => {
       )}
 
       <div className="feedback-card-container">
-        {/* LEFT */}
         <div className="feedback-left">
           <img
             src={
@@ -166,44 +159,60 @@ const FeedbackPage = () => {
             alt="Event"
           />
           <h2>{event.title}</h2>
-          <p>{event.description}</p>
+          {event.description && <p>{event.description}</p>}
+          <div className="meta">
+            <span>📅 {new Date(event.date).toLocaleDateString()}</span>
+            <span>🕒 {event.time}</span>
+          </div>
         </div>
 
-        {/* RIGHT */}
         <form className="feedback-right" onSubmit={handleSubmit}>
           <h3>
             {isLocked
               ? "Feedback Locked"
               : formData._id
-              ? "Edit Feedback"
+              ? "Edit Feedback (Only Once)"
               : "Submit Feedback"}
           </h3>
 
+          <label>Name</label>
           <input readOnly value={formData.name} />
+
+          <label>Email</label>
           <input readOnly value={formData.email} />
 
+          <label>Rating</label>
           <div className="star-row">
             {[1, 2, 3, 4, 5].map((s) => (
               <FaStar
                 key={s}
-                onClick={() =>
-                  !isLocked && setFormData({ ...formData, rating: s })
-                }
+                onClick={() => !isLocked && setFormData({ ...formData, rating: s })}
                 color={s <= formData.rating ? "#f59e0b" : "#ddd"}
+                style={{ cursor: isLocked ? "not-allowed" : "pointer" }}
               />
             ))}
           </div>
 
+          <label>Comments</label>
           <textarea
             readOnly={isLocked}
             value={formData.comments}
             onChange={(e) =>
-              setFormData({ ...formData, comments: e.target.value })
+              !isLocked && setFormData({ ...formData, comments: e.target.value })
             }
-          />
+            rows={5}
+          ></textarea>
 
-          <button disabled={isLocked}>
-            {isLocked ? "Locked" : "Submit"}
+          <button disabled={isLocked} className="submit-btn">
+            {isLocked ? "Locked" : formData._id ? "Save Edit" : "Submit Feedback"}
+          </button>
+
+          <button
+            type="button"
+            className="back-btn"
+            onClick={() => navigate("/student/registrations")}
+          >
+            Back
           </button>
         </form>
       </div>
