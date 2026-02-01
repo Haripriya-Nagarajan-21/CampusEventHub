@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "../Styles/ActivityLog.css"; // We will create this file
-import  AdminLayout  from "../Pages/AdminLayout";
+import "../Styles/ActivityLog.css";
+import AdminLayout from "../Pages/AdminLayout";
 import { useNavigate, useLocation } from "react-router-dom";
+import api from "../config/axios"; 
 
 const ActivityLogPage = () => {
   const [activities, setActivities] = useState([]);
@@ -11,13 +12,14 @@ const ActivityLogPage = () => {
   useEffect(() => {
     const fetchActivity = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/admin/activity");
-        const data = await res.json();
-        setActivities(data);
+        // ✅ NO localhost, NO fetch
+        const res = await api.get("/admin/activity");
+        setActivities(res.data);
       } catch (error) {
         console.error("Error fetching activity:", error);
       }
     };
+
     fetchActivity();
   }, []);
 
@@ -35,17 +37,14 @@ const ActivityLogPage = () => {
                 <th>Time</th>
               </tr>
             </thead>
+
             <tbody>
               {activities.length > 0 ? (
                 activities.map((act, i) => (
-                  // Using index 'i' as a key is okay here if activities are read-only
-                  // If you ever delete items, use act._id instead
-                  <tr key={i}>
-                    <td data-label="Event">{act.eventName}</td>
-                    <td data-label="Action">{act.action}</td>
-                    <td data-label="Time">
-                      {new Date(act.timestamp).toLocaleString()}
-                    </td>
+                  <tr key={act._id || i}>
+                    <td>{act.eventName}</td>
+                    <td>{act.action}</td>
+                    <td>{new Date(act.timestamp).toLocaleString()}</td>
                   </tr>
                 ))
               ) : (
