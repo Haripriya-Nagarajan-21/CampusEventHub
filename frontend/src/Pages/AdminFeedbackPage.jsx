@@ -5,21 +5,7 @@ import { FaStar, FaRegStar, FaTrash } from "react-icons/fa";
 
 import AdminLayout from "../Pages/AdminLayout";
 import "../Styles/AdminFeedback.css";
-import api from "../config/axios"; // ✅ USE AXIOS INSTANCE
-
-// Charts
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  Legend,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-} from "recharts";
+import api from "../config/axios"; // ONLY change
 
 const AdminFeedbackPage = () => {
   const navigate = useNavigate();
@@ -31,12 +17,12 @@ const AdminFeedbackPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // ==============================
-  // ✅ FETCH FEEDBACKS USING API
-  // ==============================
+  /* =====================
+     ONLY axios logic
+  ===================== */
   const fetchFeedbacks = async () => {
     try {
-      const res = await api.get("/feedback"); // ✅ fixed
+      const res = await api.get("/feedback");
       setFeedbacks(res.data.feedbacks || []);
     } catch {
       toast.error("Failed to fetch feedbacks");
@@ -49,16 +35,12 @@ const AdminFeedbackPage = () => {
     fetchFeedbacks();
   }, []);
 
-  // ==============================
-  // ✅ DELETE USING API
-  // ==============================
   const handleDelete = async () => {
     if (!deleteTarget) return;
 
     try {
-      await api.delete(`/feedback/${deleteTarget._id}`); // ✅ fixed
-
-      toast.success("Feedback deleted successfully");
+      await api.delete(`/feedback/${deleteTarget._id}`);
+      toast.success("Deleted successfully");
 
       setFeedbacks((prev) =>
         prev.filter((f) => f._id !== deleteTarget._id)
@@ -73,16 +55,9 @@ const AdminFeedbackPage = () => {
 
   const renderStars = (rating) =>
     Array.from({ length: 5 }, (_, i) =>
-      i < rating ? (
-        <FaStar key={i} color="#f59e0b" />
-      ) : (
-        <FaRegStar key={i} color="#f59e0b" />
-      )
+      i < rating ? <FaStar key={i} color="#f59e0b" /> : <FaRegStar key={i} color="#f59e0b" />
     );
 
-  // ==============================
-  // FILTER
-  // ==============================
   const filteredFeedbacks = feedbacks.filter((f) => {
     if (!searchTerm.trim()) return true;
     const t = searchTerm.toLowerCase();
@@ -98,22 +73,17 @@ const AdminFeedbackPage = () => {
   if (loading) {
     return (
       <AdminLayout currentPath={location.pathname}>
-        <h2 style={{ textAlign: "center", marginTop: 50 }}>
-          Loading feedbacks...
-        </h2>
+        <h2 style={{ textAlign: "center", marginTop: 50 }}>Loading...</h2>
       </AdminLayout>
     );
   }
 
   return (
-    <AdminLayout
-      currentPath={location.pathname}
-      onNavigate={(p) => navigate(p)}
-    >
+    <AdminLayout currentPath={location.pathname} onNavigate={(p) => navigate(p)}>
       <div className="admin-feedback-container">
         <ToastContainer />
 
-        {/* SEARCH */}
+        {/* SEARCH (same class) */}
         <input
           type="text"
           placeholder="Search feedback..."
@@ -122,7 +92,7 @@ const AdminFeedbackPage = () => {
           className="feedback-search-input"
         />
 
-        {/* TABLE */}
+        {/* TABLE (same structure) */}
         <table className="feedback-table">
           <thead>
             <tr>
@@ -160,7 +130,7 @@ const AdminFeedbackPage = () => {
           </tbody>
         </table>
 
-        {/* DELETE MODAL */}
+        {/* SAME OLD MODAL */}
         {showModal && deleteTarget && (
           <div className="modal-overlay">
             <div className="feedback-delete-modal">
@@ -176,4 +146,3 @@ const AdminFeedbackPage = () => {
 };
 
 export default AdminFeedbackPage;
-
