@@ -2,9 +2,9 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { FaStar } from "react-icons/fa";
 import "../Styles/Feedback.css";
+import api from "../config/axios"; // ✅ IMPORTANT
 
 const FeedbackPage = () => {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const FeedbackPage = () => {
   const [loading, setLoading] = useState(true);
   const [event, setEvent] = useState(null);
   const [isLocked, setIsLocked] = useState(false);
-  const [showThankYou, setShowThankYou] = useState(false); // ✅ NEW: Thank you card
+  const [showThankYou, setShowThankYou] = useState(false);
 
   const [formData, setFormData] = useState({
     name: user?.fullName || user?.name || "",
@@ -33,16 +33,16 @@ const FeedbackPage = () => {
 
   const lockKey = `fb_lock_${eventId}_${user?.email}`;
 
-  /* =========== FETCH EVENT =========== */
+  /* =====================================================
+     ✅ FETCH EVENT (FIXED)
+  ===================================================== */
   useEffect(() => {
     if (!user) return navigate("/login");
 
     const fetchEvent = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/events/${eventId}`);
-        const data = await res.json();
-        if (!res.ok) throw new Error();
-        setEvent(data.event || data);
+        const res = await api.get(`/events/${eventId}`);
+        setEvent(res.data.event || res.data);
       } catch {
         toast.error("Event not found ⚠️");
         setEvent(null);
@@ -50,10 +50,13 @@ const FeedbackPage = () => {
         setLoading(false);
       }
     };
+
     fetchEvent();
   }, [eventId, navigate, user]);
 
-  /* =========== LOAD FEEDBACK & LOCK =========== */
+  /* =====================================================
+     ✅ LOAD EXISTING FEEDBACK (FIXED)
+  ===================================================== */
   useEffect(() => {
     if (!user?.email || !eventId) return;
 
@@ -61,8 +64,8 @@ const FeedbackPage = () => {
 
     const loadFeedback = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/feedback");
-        const data = await res.json();
+        const res = await api.get("/feedback");
+        const data = res.data;
 
         if (data.success) {
           const existing = data.feedbacks.find(
@@ -85,7 +88,9 @@ const FeedbackPage = () => {
     loadFeedback();
   }, [eventId, user?.email]);
 
-  /* =========== SUBMIT FEEDBACK =========== */
+  /* =====================================================
+     ✅ SUBMIT FEEDBACK (FIXED)
+  ===================================================== */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLocked) return;
@@ -95,27 +100,25 @@ const FeedbackPage = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, eventId }),
+      const res = await api.post("/feedback", {
+        ...formData,
+        eventId,
       });
 
-      const data = await res.json();
+      const data = res.data;
 
       if (data.success) {
-        if (!formData._id) {
-          toast.success("🎉 Feedback Submitted!", { autoClose: 1400 });
-        } else {
-          toast.success("✏️ Feedback Updated!", { autoClose: 1400 });
+        toast.success(
+          formData._id ? "✏️ Feedback Updated!" : "🎉 Feedback Submitted!"
+        );
+
+        if (formData._id) {
           localStorage.setItem(lockKey, "true");
           setIsLocked(true);
         }
 
-        // ✅ Show thank-you card
         setShowThankYou(true);
 
-        // Redirect after delay
         setTimeout(() => {
           navigate("/student/registrations");
         }, 1400);
@@ -125,14 +128,15 @@ const FeedbackPage = () => {
     }
   };
 
-  /* ======== LOADING STATE ======== */
+  /* ===================================================== */
+
   if (loading) return <h3 style={{ textAlign: "center" }}>Loading…</h3>;
 
   if (!event)
     return (
       <div className="feedback-wrapper">
         <h3>Event not found</h3>
-        <button className="back-btn" onClick={() => navigate("/student/registrations")}>
+        <button onClick={() => navigate("/student/registrations")}>
           Back
         </button>
       </div>
@@ -142,7 +146,6 @@ const FeedbackPage = () => {
     <div className="feedback-wrapper">
       <ToastContainer />
 
-      {/* ✅ THANK YOU MESSAGE CARD */}
       {showThankYou && (
         <div className="thank-you-overlay">
           <div className="thank-you-card">
@@ -153,7 +156,7 @@ const FeedbackPage = () => {
       )}
 
       <div className="feedback-card-container">
-        {/* LEFT SIDE */}
+        {/* LEFT */}
         <div className="feedback-left">
           <img
             src={
@@ -163,61 +166,44 @@ const FeedbackPage = () => {
             alt="Event"
           />
           <h2>{event.title}</h2>
-          {event.description && <p>{event.description}</p>}
-          <div className="meta">
-            <span>📅 {new Date(event.date).toLocaleDateString()}</span>
-            <span>🕒 {event.time}</span>
-          </div>
+          <p>{event.description}</p>
         </div>
 
-        {/* RIGHT SIDE FORM */}
+        {/* RIGHT */}
         <form className="feedback-right" onSubmit={handleSubmit}>
           <h3>
             {isLocked
               ? "Feedback Locked"
               : formData._id
-              ? "Edit Feedback (Only Once)"
+              ? "Edit Feedback"
               : "Submit Feedback"}
           </h3>
 
-          <label>Name</label>
           <input readOnly value={formData.name} />
-
-          <label>Email</label>
           <input readOnly value={formData.email} />
 
-          <label>Rating</label>
           <div className="star-row">
             {[1, 2, 3, 4, 5].map((s) => (
               <FaStar
                 key={s}
-                onClick={() => !isLocked && setFormData({ ...formData, rating: s })}
+                onClick={() =>
+                  !isLocked && setFormData({ ...formData, rating: s })
+                }
                 color={s <= formData.rating ? "#f59e0b" : "#ddd"}
-                style={{ cursor: isLocked ? "not-allowed" : "pointer" }}
               />
             ))}
           </div>
 
-          <label>Comments</label>
           <textarea
             readOnly={isLocked}
             value={formData.comments}
             onChange={(e) =>
-              !isLocked && setFormData({ ...formData, comments: e.target.value })
+              setFormData({ ...formData, comments: e.target.value })
             }
-            rows={5}
-          ></textarea>
+          />
 
-          <button disabled={isLocked} className="submit-btn">
-            {isLocked ? "Locked" : formData._id ? "Save Edit" : "Submit Feedback"}
-          </button>
-
-          <button
-            type="button"
-            className="back-btn"
-            onClick={() => navigate("/student/registrations")}
-          >
-            Back
+          <button disabled={isLocked}>
+            {isLocked ? "Locked" : "Submit"}
           </button>
         </form>
       </div>
