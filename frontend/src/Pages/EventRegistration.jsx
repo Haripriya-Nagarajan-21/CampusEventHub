@@ -1,9 +1,11 @@
+// src/Pages/EventRegistration.jsx
+
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../Styles/EventRegistration.css";
-import api from "../config/axios"; // ✅ ONLY ADD
+import api from "../config/axios"; // ✅ ONLY ADDED
 
 const EventRegistration = () => {
   const location = useLocation();
@@ -19,25 +21,21 @@ const EventRegistration = () => {
 
   const [registeredEvents, setRegisteredEvents] = useState([]);
 
-  /* =================================================
-     ✅ ONLY CHANGE: fetch → api.get
-  ================================================= */
+  /* =====================================================
+     ✅ ONLY CHANGED → axios
+  ===================================================== */
   useEffect(() => {
-    const fetchRegistrations = async () => {
-      if (!user?.email) return;
-
-      try {
-        const res = await api.get(`/registrations/student/${user.email}`);
-        const ids = (res.data.registrations || []).map(
-          (r) => r.eventId?._id || r.eventId
-        );
-        setRegisteredEvents(ids);
-      } catch {
-        setRegisteredEvents([]);
-      }
-    };
-
-    fetchRegistrations();
+    if (user?.email) {
+      api
+        .get(`/registrations/student/${user.email}`)
+        .then((res) => {
+          const ids = (res.data.registrations || []).map(
+            (r) => r.eventId?._id || r.eventId
+          );
+          setRegisteredEvents(ids);
+        })
+        .catch(() => setRegisteredEvents([]));
+    }
   }, [user?.email]);
 
   useEffect(() => {
@@ -73,9 +71,9 @@ const EventRegistration = () => {
     setFormData((p) => ({ ...p, [name]: value }));
   };
 
-  /* =================================================
-     ✅ ONLY CHANGE: fetch POST → api.post
-  ================================================= */
+  /* =====================================================
+     ✅ ONLY CHANGED → axios
+  ===================================================== */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -94,14 +92,12 @@ const EventRegistration = () => {
     }
 
     try {
-      const res = await api.post("/registrations", {
+      const { data } = await api.post("/registrations", {
         eventId,
         name: formData.name,
         email: formData.email,
         college: formData.college,
       });
-
-      const data = res.data;
 
       if (data.success) {
         toast.success(data.message || "🎉 Registered successfully!", {
@@ -110,9 +106,7 @@ const EventRegistration = () => {
         });
 
         setTimeout(() => {
-          navigate("/student-dashboard", {
-            state: { justRegistered: true },
-          });
+          navigate("/student-dashboard", { state: { justRegistered: true } });
         }, 1400);
       } else {
         toast.error(data.message || "Registration failed!", {
@@ -127,10 +121,13 @@ const EventRegistration = () => {
     }
   };
 
+  /* =====================================================
+     UI 100% SAME (NOT MODIFIED)
+  ===================================================== */
+
   return (
     <div className="er-registration-container">
       <ToastContainer />
-
       <div className="er-registration-card">
 
         {/* LEFT */}
@@ -142,7 +139,6 @@ const EventRegistration = () => {
             }
             alt={event.title || "event"}
           />
-
           <h2>{event.title}</h2>
           <p className="er-college">{event.collegeName}</p>
           <p className="er-desc">{event.description}</p>
@@ -153,7 +149,7 @@ const EventRegistration = () => {
           </div>
         </div>
 
-        {/* RIGHT (unchanged classes) */}
+        {/* RIGHT */}
         <form className="er-registration-form" onSubmit={handleSubmit}>
           <h3>Register for this Event</h3>
 
