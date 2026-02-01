@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import "../Styles/ResetPassword.css";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import api from "../config/axios"; // ✅ ONLY CHANGED
+import api from "../config/axios"; // ✅ ONLY CHANGED (axios instance)
 import resetPasswordImage from "../assets/Forgot password-pana 1.svg";
-import { notifyError, notifyInfo, notifySuccess } from "../utils/toast";
+import { notifyError, notifyInfo, notifySuccess } from "../utils/toast";  
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -15,6 +15,7 @@ const ResetPassword = () => {
 
   const navigate = useNavigate();
 
+  // ✅ Get email from localStorage (stored after OTP verification)
   const [email, setEmail] = useState("");
 
   useEffect(() => {
@@ -27,9 +28,7 @@ const ResetPassword = () => {
     }
   }, [navigate]);
 
-  /* =====================================================
-     ✅ ONLY CHANGED → axios → api
-  ===================================================== */
+  // ✅ Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -51,6 +50,7 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
+      // ✅ ONLY CHANGED → api instead of axios
       const response = await api.post("/auth/reset-password", {
         email,
         newPassword: password,
@@ -58,8 +58,10 @@ const ResetPassword = () => {
 
       notifySuccess(response.data.message || "Password updated successfully!");
 
+      // ✅ Remove email from localStorage
       localStorage.removeItem("resetEmail");
 
+      // ✅ Navigate to login page after 2 seconds
       setTimeout(() => {
         navigate("/login");
       }, 2000);
@@ -76,6 +78,7 @@ const ResetPassword = () => {
 
   return (
     <div className="password-wrapper">
+      {/* Left Section - Form */}
       <div className="password-left">
         <div className="password-form">
           <h2>New Password</h2>
@@ -133,11 +136,21 @@ const ResetPassword = () => {
           </form>
 
           <button onClick={handleBack} className="back-button">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path
+                d="M12.5 15L7.5 10L12.5 5"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
             Back
           </button>
         </div>
       </div>
 
+      {/* Right Section - Illustration */}
       <div className="password-right">
         <img src={resetPasswordImage} alt="Reset Password Illustration" />
       </div>
