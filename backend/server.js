@@ -18,7 +18,7 @@ const app = express();
 // ✅ Middleware
 app.use(
   cors({
-    origin: "http://localhost:5173", // frontend URL (React)
+    origin: true, // frontend URL (React)
     credentials: true,
   })
 );
