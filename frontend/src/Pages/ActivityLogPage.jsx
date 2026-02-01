@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "../Styles/ActivityLog.css";
+import "../Styles/ActivityLog.css"; // We will create this file
 import AdminLayout from "../Pages/AdminLayout";
 import { useNavigate, useLocation } from "react-router-dom";
-import api from "../config/axios"; // axios instance
+import api from "../config/axios"; // ✅ ONLY ADDED
 
 const ActivityLogPage = () => {
   const [activities, setActivities] = useState([]);
@@ -12,9 +12,11 @@ const ActivityLogPage = () => {
   useEffect(() => {
     const fetchActivity = async () => {
       try {
-        // ✅ only this line changed (no localhost)
+        // ✅ ONLY CHANGED (fetch → api)
         const res = await api.get("/admin/activity");
-        setActivities(res.data);
+        const data = res.data;
+
+        setActivities(data);
       } catch (error) {
         console.error("Error fetching activity:", error);
       }
@@ -24,7 +26,10 @@ const ActivityLogPage = () => {
   }, []);
 
   return (
-    <AdminLayout currentPath={location.pathname} onNavigate={(p) => navigate(p)}>
+    <AdminLayout
+      currentPath={location.pathname}
+      onNavigate={(p) => navigate(p)}
+    >
       <div className="panel">
         <h3>Activity Log</h3>
 
