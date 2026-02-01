@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import "../Styles/ResetPassword.css";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import resetPasswordImage from "../assets/Forgot password-pana 1.svg";
-import { notifyError, notifyInfo, notifySuccess } from "../utils/toast";  
+import { notifyError, notifyInfo, notifySuccess } from "../utils/toast";
+import api from "../config/axios"; // ✅ USE GLOBAL AXIOS
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -15,22 +15,27 @@ const ResetPassword = () => {
 
   const navigate = useNavigate();
 
-  // ✅ Get email from localStorage (stored after OTP verification)
+  /* ===============================
+     GET EMAIL FROM LOCAL STORAGE
+  =============================== */
   const [email, setEmail] = useState("");
+
   useEffect(() => {
     const storedEmail = localStorage.getItem("resetEmail");
+
     if (storedEmail) {
       setEmail(storedEmail);
     } else {
-      notifyError("Email not found. Please restart the password reset process.");
+      notifyError("Email not found. Restart the password reset process.");
       setTimeout(() => navigate("/forgot-password"), 2000);
     }
   }, [navigate]);
 
-  // ✅ Handle form submission
+  /* ===============================
+     SUBMIT
+  =============================== */
   const handleSubmit = async (e) => {
     e.preventDefault();
- 
 
     if (!password || !confirmPassword) {
       notifyInfo("Please fill both fields");
@@ -50,24 +55,17 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
-      // ✅ Call backend reset-password API
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/reset-password",
-        {
-          email,
-          newPassword: password,
-        }
-      );
+      // ✅ FIXED (NO LOCALHOST)
+      const response = await api.post("/auth/reset-password", {
+        email,
+        newPassword: password,
+      });
 
       notifySuccess(response.data.message || "Password updated successfully!");
 
-      // ✅ Remove email from localStorage
       localStorage.removeItem("resetEmail");
 
-      // ✅ Navigate to login page after 2 seconds
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+      setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
       notifyError(err.response?.data?.message || "Failed to reset password");
     } finally {
@@ -79,18 +77,20 @@ const ResetPassword = () => {
     navigate("/verify-otp", { state: { email } });
   };
 
+  /* =============================== */
+
   return (
     <div className="password-wrapper">
-      {/* Left Section - Form */}
+      {/* Left Section */}
       <div className="password-left">
         <div className="password-form">
           <h2>New Password</h2>
           <p className="password-subtitle">
-            Set the new password for your account so you can login and access
-            all features.
+            Set a new password to secure your account.
           </p>
 
           <form onSubmit={handleSubmit}>
+            {/* Password */}
             <div className="password-wrapper-input">
               <input
                 type={showPassword ? "text" : "password"}
@@ -99,19 +99,17 @@ const ResetPassword = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+
               <button
                 type="button"
                 className="eye-button"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? (
-                  <FaRegEye size={20} color="#666" />
-                ) : (
-                  <FaRegEyeSlash size={20} color="#666" />
-                )}
+                {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
               </button>
             </div>
 
+            {/* Confirm */}
             <div className="password-wrapper-input">
               <input
                 type={showConfirmPassword ? "text" : "password"}
@@ -120,39 +118,28 @@ const ResetPassword = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
+
               <button
                 type="button"
                 className="eye-button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
-                {showConfirmPassword ? (
-                  <FaRegEye size={20} color="#666" />
-                ) : (
-                  <FaRegEyeSlash size={20} color="#666" />
-                )}
+                {showConfirmPassword ? <FaRegEye /> : <FaRegEyeSlash />}
               </button>
             </div>
+
             <button type="submit" disabled={loading}>
               {loading ? "Updating..." : "Update Password"}
             </button>
           </form>
 
           <button onClick={handleBack} className="back-button">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path
-                d="M12.5 15L7.5 10L12.5 5"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Back
+            ← Back
           </button>
         </div>
       </div>
 
-      {/* Right Section - Illustration */}
+      {/* Right Section */}
       <div className="password-right">
         <img src={resetPasswordImage} alt="Reset Password Illustration" />
       </div>
