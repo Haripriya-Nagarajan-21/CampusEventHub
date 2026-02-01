@@ -6,38 +6,34 @@ import {
   FaUniversity,
   FaUserEdit,
 } from "react-icons/fa";
-
-import api from "../config/axios"; // ✅ USE GLOBAL API
+import api from "../config/axios"; // ✅ ONLY ADDED
 
 const StudentProfile = () => {
   const [student, setStudent] = useState(null);
   const [registrations, setRegistrations] = useState([]);
   const [activeTab, setActiveTab] = useState("All");
   const [editOpen, setEditOpen] = useState(false);
-
   const [editData, setEditData] = useState({
     fullName: "",
     email: "",
     college: "",
   });
 
-  /* =========================
-     LOAD USER + REGISTRATIONS
-  ========================= */
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
 
-    if (!user) return;
-
-    setStudent(user);
-    setEditData(user);
+    if (user) {
+      setStudent(user);
+      setEditData(user);
+    }
 
     const getRegs = async () => {
       try {
-        // ✅ FIXED HERE
-        const { data } = await api.get(
-          `/registrations/student/${user.email}`
-        );
+        /* =====================================================
+           ✅ ONLY CHANGED → axios instead of fetch
+        ===================================================== */
+        const res = await api.get(`/registrations/student/${user.email}`);
+        const data = res.data;
 
         setRegistrations(data.registrations || []);
       } catch {
@@ -45,23 +41,18 @@ const StudentProfile = () => {
       }
     };
 
-    getRegs();
+    if (user?.email) getRegs();
   }, []);
 
-  /* =========================
-     FILTER REGISTRATIONS
-  ========================= */
   const filtered =
     activeTab === "All"
       ? registrations
       : registrations.filter((r) => r.status === activeTab);
 
-  /* =========================
-     SAVE PROFILE
-  ========================= */
   const saveProfile = () => {
     localStorage.setItem("user", JSON.stringify(editData));
     setStudent(editData);
+    window.dispatchEvent(new Event("storage"));
     setEditOpen(false);
   };
 
@@ -198,7 +189,6 @@ const StudentProfile = () => {
                   Cancel
                 </button>
               </div>
-
             </div>
           </div>
         )}
