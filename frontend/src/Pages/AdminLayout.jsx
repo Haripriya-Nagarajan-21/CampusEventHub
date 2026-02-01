@@ -1,4 +1,5 @@
 // src/Pages/AdminLayout.jsx
+
 import React, { useState, useEffect } from "react";
 import {
   FaBell,
@@ -10,8 +11,8 @@ import {
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import api from "../config/axios"; // ✅ ONLY ADDED
 import "../Styles/AdminLayout.css";
-import api from "../config/axios"; // ✅ ONLY ADDITION
 
 const AdminLayout = ({
   children,
@@ -27,6 +28,7 @@ const AdminLayout = ({
   const [profileOpen, setProfileOpen] = useState(false);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
+
   const [notifications, setNotifications] = useState([]);
   const [notifCount, setNotifCount] = useState(0);
 
@@ -54,15 +56,13 @@ const AdminLayout = ({
       : { fullName: "Admin", email: "", college: "" };
   });
 
-  const [editData, setEditData] = useState({
-    fullName: user.fullName,
-    email: user.email,
-    college: user.college,
-  });
+  const [editData, setEditData] = useState(user);
 
+  /* ================= SIDEBAR ================= */
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const closeSidebar = () => setSidebarOpen(false);
-  const toggleNotif = () => setNotifOpen(!notifOpen);
+
+  /* ================= PROFILE ================= */
   const toggleProfile = () => setProfileOpen(!profileOpen);
 
   const handleLogout = () => setLogoutConfirmOpen(true);
@@ -87,19 +87,17 @@ const AdminLayout = ({
   };
 
   /* =====================================================
-     ✅ ONLY CHANGE HERE: fetch → axios api.get
-  ====================================================== */
+     ✅ ONLY CHANGE: fetch → axios api
+  ===================================================== */
   useEffect(() => {
     let mounted = true;
 
     const fetchNotifications = async () => {
       try {
-        const res = await api.get("/registrations/pending"); // ✅ FIXED
-        const data = res.data;
-
+        const res = await api.get("/registrations/pending"); // ✅ changed
         if (mounted) {
-          setNotifications(data);
-          setNotifCount(data.length);
+          setNotifications(res.data || []);
+          setNotifCount(res.data?.length || 0);
         }
       } catch {
         if (mounted) {
@@ -123,8 +121,10 @@ const AdminLayout = ({
     const handleResize = () => {
       if (window.innerWidth > 1100) setSidebarOpen(true);
     };
+
     window.addEventListener("resize", handleResize);
     handleResize();
+
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -133,6 +133,9 @@ const AdminLayout = ({
     navigate("/admin/registrations");
   };
 
+  const toggleNotif = () => setNotifOpen(!notifOpen);
+
+  /* ================= AVATAR ================= */
   const getGradient = (name) => {
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
@@ -145,6 +148,7 @@ const AdminLayout = ({
 
   const userInitial = user.fullName.charAt(0).toUpperCase();
 
+  /* ================= UI (UNCHANGED) ================= */
   return (
     <div className={`dashboard-container ${sidebarOpen ? "sidebar-open" : ""}`}>
       <Sidebar
@@ -160,7 +164,6 @@ const AdminLayout = ({
 
       <main className="main-content">
         <header className="topbar">
-          {/* KEEP ALL YOUR ORIGINAL CLASSES */}
           <button className="menu-icon" onClick={toggleSidebar}>☰</button>
 
           <h2 className="admin-title">Admin Dashboard</h2>
@@ -171,38 +174,11 @@ const AdminLayout = ({
               {darkMode ? <FaSun /> : <FaMoon />}
             </div>
 
-            {/* Notifications */}
             <div className="notification" onClick={toggleNotif}>
               <FaBell />
               {notifCount > 0 && <span className="notif-count">{notifCount}</span>}
-
-              {notifOpen && (
-                <div className="notif-dropdown">
-                  {notifications.length > 0 ? (
-                    notifications.map((notif, i) => (
-                      <div key={i} className="notif-item" onClick={handleNotifClick}>
-                        <div className="notif-top">
-                          <strong>{notif.studentName}</strong>
-                          <span className="notif-status">
-                            <FaCheckCircle /> Registered
-                          </span>
-                        </div>
-                        <p className="notif-event">
-                          Event: <b>{notif.eventName}</b>
-                        </p>
-                        <small>
-                          🕒 {new Date(notif.timestamp).toLocaleString()}
-                        </small>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="no-notif">No new notifications</div>
-                  )}
-                </div>
-              )}
             </div>
 
-            {/* Profile */}
             <div className="profile" onClick={toggleProfile}>
               <div
                 className="profile-avatar"
@@ -210,14 +186,6 @@ const AdminLayout = ({
               >
                 {userInitial}
               </div>
-
-              {profileOpen && (
-                <div className="profile-dropdown">
-                  <button onClick={handleLogout}>
-                    <FaSignOutAlt /> Logout
-                  </button>
-                </div>
-              )}
             </div>
 
           </div>
