@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "../Styles/EventRegistration.css";
-import api from "../config/axios"; // ✅ USE AXIOS
+import api from "../config/axios"; // ✅ ONLY ADD
 
 const EventRegistration = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
   const event = location.state?.event;
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -19,15 +19,15 @@ const EventRegistration = () => {
 
   const [registeredEvents, setRegisteredEvents] = useState([]);
 
-  /* ==============================
-     ✅ GET REGISTERED EVENTS
-  ============================== */
+  /* =================================================
+     ✅ ONLY CHANGE: fetch → api.get
+  ================================================= */
   useEffect(() => {
     const fetchRegistrations = async () => {
       if (!user?.email) return;
 
       try {
-        const res = await api.get(`/registrations/student/${user.email}`); // ✅ fixed
+        const res = await api.get(`/registrations/student/${user.email}`);
         const ids = (res.data.registrations || []).map(
           (r) => r.eventId?._id || r.eventId
         );
@@ -40,12 +40,9 @@ const EventRegistration = () => {
     fetchRegistrations();
   }, [user?.email]);
 
-  /* ==============================
-     LOGIN CHECK
-  ============================== */
   useEffect(() => {
     if (!user) {
-      toast.warn("Please log in to continue!");
+      toast.warn("Please log in to continue!", { position: "top-center" });
       navigate("/login");
     }
   }, [user, navigate]);
@@ -56,10 +53,17 @@ const EventRegistration = () => {
   if (!event) {
     return (
       <div className="er-registration-container">
-        <h2>No event selected 😕</h2>
-        <button onClick={() => navigate("/student-dashboard")}>
-          Back
-        </button>
+        <div className="er-registration-card">
+          <div style={{ padding: 24 }}>
+            <h2>No event selected 😕</h2>
+            <button
+              onClick={() => navigate("/student-dashboard")}
+              className="er-back-btn"
+            >
+              Back to Dashboard
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -69,21 +73,23 @@ const EventRegistration = () => {
     setFormData((p) => ({ ...p, [name]: value }));
   };
 
-  /* ==============================
-     ✅ REGISTER USING API
-  ============================== */
+  /* =================================================
+     ✅ ONLY CHANGE: fetch POST → api.post
+  ================================================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const eventId = event._id || event.id;
 
     if (!eventId || !formData.name || !formData.email || !formData.college) {
-      toast.error("All fields are required!");
+      toast.error("All fields are required!", { position: "top-center" });
       return;
     }
 
     if (isAlreadyRegistered(eventId)) {
-      toast.warn("Already registered!");
+      toast.warn("You have already registered for this event!", {
+        position: "top-center",
+      });
       return;
     }
 
@@ -95,20 +101,29 @@ const EventRegistration = () => {
         college: formData.college,
       });
 
-      if (res.data.success) {
-        toast.success("🎉 Registered successfully!");
+      const data = res.data;
+
+      if (data.success) {
+        toast.success(data.message || "🎉 Registered successfully!", {
+          position: "top-center",
+          autoClose: 1400,
+        });
 
         setTimeout(() => {
           navigate("/student-dashboard", {
             state: { justRegistered: true },
           });
-        }, 1200);
+        }, 1400);
       } else {
-        toast.error(res.data.message || "Registration failed!");
+        toast.error(data.message || "Registration failed!", {
+          position: "top-center",
+        });
       }
     } catch (error) {
-      console.error(error);
-      toast.error("Network error!");
+      console.error("Network error:", error);
+      toast.error("Network error. Try again later!", {
+        position: "top-center",
+      });
     }
   };
 
@@ -117,53 +132,61 @@ const EventRegistration = () => {
       <ToastContainer />
 
       <div className="er-registration-card">
-        {/* Event Preview */}
+
+        {/* LEFT */}
         <div className="er-event-preview">
           <img
             src={
               event.image ||
               "https://img.freepik.com/free-vector/event-concept-illustration_114360-931.jpg"
             }
-            alt={event.title}
+            alt={event.title || "event"}
           />
 
           <h2>{event.title}</h2>
-          <p>{event.description}</p>
-          <p>📅 {event.date}</p>
-          <p>🕒 {event.time}</p>
+          <p className="er-college">{event.collegeName}</p>
+          <p className="er-desc">{event.description}</p>
+
+          <div className="er-event-meta">
+            <p>📅 {event.date}</p>
+            <p>🕒 {event.time}</p>
+          </div>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit}>
+        {/* RIGHT (unchanged classes) */}
+        <form className="er-registration-form" onSubmit={handleSubmit}>
+          <h3>Register for this Event</h3>
+
+          <label>Name</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            placeholder="Name"
             required
           />
 
+          <label>Email</label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="Email"
             required
           />
 
+          <label>College</label>
           <input
             type="text"
             name="college"
             value={formData.college}
             onChange={handleChange}
-            placeholder="College"
             required
           />
 
           <button
             type="submit"
+            className="er-submit-btn"
             disabled={isAlreadyRegistered(event._id)}
           >
             {isAlreadyRegistered(event._id)
@@ -173,6 +196,7 @@ const EventRegistration = () => {
 
           <button
             type="button"
+            className="er-back-btn"
             onClick={() => navigate("/student-dashboard")}
           >
             Back
