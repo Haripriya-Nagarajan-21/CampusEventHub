@@ -12,12 +12,12 @@ import {
 } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../Styles/StudentLayout.css";
-import api from "../config/axios"; // ✅ ONLY ADDED
+import api from "../config/axios"; // ✅ added axios instance
 
 const StudentLayout = ({ children }) => {
   const navigate = useNavigate();
 
-  /* ---------------- USER ---------------- */
+  /* ---------------- USER (Always Fresh From localStorage) ---------------- */
   const defaultUser = { fullName: "Student", email: "", college: "" };
   const user = JSON.parse(localStorage.getItem("user")) || defaultUser;
 
@@ -49,15 +49,14 @@ const StudentLayout = ({ children }) => {
 
   const seenKey = (email) => `seen_notifications_${email}`;
 
-  /* =====================================================
-     ✅ ONLY CHANGED → axios api instead of fetch
-  ===================================================== */
   const loadNotifications = async () => {
     if (!user?.email) return;
 
     try {
-      const res = await api.get(`/registrations/student/${user.email}`); // ✅ changed
-      const data = res.data;
+      // ✅ converted to axios
+      const { data } = await api.get(
+        `/registrations/student/${user.email}`
+      );
 
       const list = Array.isArray(data.registrations) ? data.registrations : [];
 
@@ -91,8 +90,6 @@ const StudentLayout = ({ children }) => {
     return () => clearInterval(interval);
   }, [user.email]);
 
-  /* ================= EVERYTHING BELOW IS 100% SAME ================= */
-
   const handleBellClick = () => {
     const actionableIds = notifications
       .filter((n) => n.status === "approved" || n.status === "rejected")
@@ -100,14 +97,19 @@ const StudentLayout = ({ children }) => {
 
     localStorage.setItem(seenKey(user.email), JSON.stringify(actionableIds));
     setNotifCount(0);
+
     setShowNotifDropdown(!showNotifDropdown);
   };
 
+  /* ---------------- Profile Dropdown ---------------- */
   const [profileOpen, setProfileOpen] = useState(false);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
-  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
 
   const toggleProfile = () => setProfileOpen(!profileOpen);
+
+  /* ---------------- LOGOUT CONFIRMATION ---------------- */
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
+
   const handleLogout = () => setLogoutConfirmOpen(true);
 
   const confirmLogout = () => {
@@ -115,8 +117,11 @@ const StudentLayout = ({ children }) => {
     navigate("/login");
   };
 
-  const cancelLogout = () => setLogoutConfirmOpen(false);
+  const cancelLogout = () => {
+    setLogoutConfirmOpen(false);
+  };
 
+  /* ---------------- Edit Profile ---------------- */
   const [editData, setEditData] = useState(user);
 
   const handleEditChange = (e) =>
@@ -127,6 +132,7 @@ const StudentLayout = ({ children }) => {
     setEditProfileOpen(false);
   };
 
+  /* ---------------- Avatar ---------------- */
   const getGradient = (name = "") => {
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
@@ -140,9 +146,104 @@ const StudentLayout = ({ children }) => {
   const userInitial =
     (user.fullName?.charAt(0) || user.email?.charAt(0) || "S").toUpperCase();
 
+  /* ---------------- RENDER ---------------- */
   return (
     <div className={`student-dashboard-container ${sidebarOpen ? "sidebar-open" : ""}`}>
-      {children}
+      {/* Sidebar */}
+      <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+        <div className="sidebar-header">
+          <h2>{sidebarOpen ? "🎓 EventHub" : "🎓"}</h2>
+        </div>
+
+        <nav className="sidebar-menu">
+          <NavLink to="/student-dashboard"><FaHome /> {sidebarOpen && "Dashboard"}</NavLink>
+          <NavLink to="/student/events"><FaClipboardList /> {sidebarOpen && "Events"}</NavLink>
+          <NavLink to="/student/registrations"><FaCalendarAlt /> {sidebarOpen && "My Registrations"}</NavLink>
+          <NavLink to="/student/profile"><FaHome /> {sidebarOpen && "Profile"}</NavLink>
+        </nav>
+      </aside>
+
+      {sidebarOpen && window.innerWidth <= 1100 && (
+        <div className="sidebar-overlay" onClick={closeSidebar}></div>
+      )}
+
+      {/* Navbar */}
+      <main className="main-content">
+        <header className="topbar">
+          <button className="menu-icon" onClick={toggleSidebar}>☰</button>
+
+          <h2 className="student-title">Student Dashboard</h2>
+
+          <div className="right-controls">
+
+            <div className="theme-switch" onClick={handleThemeToggle}>
+              {darkMode ? <FaSun /> : <FaMoon />}
+            </div>
+
+            <div className="notif-container">
+              <button className="bell-btn" onClick={handleBellClick}>
+                <FaBell />
+                {notifCount > 0 && <span className="badge">{notifCount}</span>}
+              </button>
+
+              {showNotifDropdown && (
+                <div className="notif-dropdown">
+                  <h4>Notifications</h4>
+                  <ul>
+                    {notifications
+                      .filter((n) => n.status === "approved" || n.status === "rejected")
+                      .map((n) => (
+                        <li key={n._id} className="notif-item">
+                          <strong>{n.eventName}</strong>
+                          <span className={n.status === "approved" ? "notif-approved" : "notif-rejected"}>
+                            {n.status === "approved" ? "Approved 🎉" : "Rejected ❌"}
+                          </span>
+                        </li>
+                      ))}
+
+                    {notifications.filter(n => n.status === "approved" || n.status === "rejected").length === 0 && (
+                      <p>No notifications</p>
+                    )}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            <div className="profile" onClick={toggleProfile}>
+              <div className="profile-avatar" style={{ background: getGradient(user.fullName) }}>
+                {userInitial}
+              </div>
+
+              {profileOpen && (
+                <div className="profile-dropdown">
+                  <div className="profile-info">
+                    <h4>{user.fullName}</h4>
+                    <p className="college">{user.college || "College Student"}</p>
+                    <p className="email">{user.email}</p>
+                  </div>
+
+                  <hr className="profile-divider" />
+
+                  <button
+                    onClick={() => {
+                      setEditProfileOpen(true);
+                      setProfileOpen(false);
+                    }}
+                  >
+                    <FaEdit /> Edit Profile
+                  </button>
+
+                  <button onClick={handleLogout}>
+                    <FaSignOutAlt /> Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </header>
+
+        {children}
+      </main>
     </div>
   );
 };
