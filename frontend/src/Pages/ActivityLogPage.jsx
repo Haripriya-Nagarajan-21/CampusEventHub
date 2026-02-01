@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../Styles/ActivityLog.css";
 import AdminLayout from "../Pages/AdminLayout";
 import { useNavigate, useLocation } from "react-router-dom";
-import api from "../config/axios"; 
+import api from "../config/axios"; // axios instance
 
 const ActivityLogPage = () => {
   const [activities, setActivities] = useState([]);
@@ -12,7 +12,7 @@ const ActivityLogPage = () => {
   useEffect(() => {
     const fetchActivity = async () => {
       try {
-        // ✅ NO localhost, NO fetch
+        // ✅ only this line changed (no localhost)
         const res = await api.get("/admin/activity");
         setActivities(res.data);
       } catch (error) {
@@ -41,10 +41,12 @@ const ActivityLogPage = () => {
             <tbody>
               {activities.length > 0 ? (
                 activities.map((act, i) => (
-                  <tr key={act._id || i}>
-                    <td>{act.eventName}</td>
-                    <td>{act.action}</td>
-                    <td>{new Date(act.timestamp).toLocaleString()}</td>
+                  <tr key={i}>
+                    <td data-label="Event">{act.eventName}</td>
+                    <td data-label="Action">{act.action}</td>
+                    <td data-label="Time">
+                      {new Date(act.timestamp).toLocaleString()}
+                    </td>
                   </tr>
                 ))
               ) : (
