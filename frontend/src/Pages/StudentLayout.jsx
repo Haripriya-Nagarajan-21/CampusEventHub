@@ -12,7 +12,7 @@ import {
 } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../Styles/StudentLayout.css";
-import api from "../config/axios"; // ✅ added axios instance
+import api from "../config/axios";
 
 const StudentLayout = ({ children }) => {
   const navigate = useNavigate();
@@ -49,40 +49,40 @@ const StudentLayout = ({ children }) => {
 
   const seenKey = (email) => `seen_notifications_${email}`;
 
-  const loadNotifications = async () => {
-    if (!user?.email) return;
+ const loadNotifications = async () => {
+  if (!user?.email) return;
 
-    try {
-      // ✅ converted to axios
-      const { data } = await api.get(
-        `/registrations/student/${user.email}`
-      );
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/registrations/student/${user.email}`
+    );
 
-      const list = Array.isArray(data.registrations) ? data.registrations : [];
+    const data = await res.json();
+    const list = Array.isArray(data.registrations) ? data.registrations : [];
 
-      const normalized = list.map((n) => ({
-        _id: n._id,
-        eventName: n.eventId?.title || "Event",
-        status: n.status?.toLowerCase() || "",
-        date: n.timestamp || null,
-      }));
+    const normalized = list.map((n) => ({
+      _id: n._id,
+      eventName: n.eventId?.title || "Event",
+      status: n.status?.toLowerCase() || "",
+      date: n.timestamp || null,
+    }));
 
-      setNotifications(normalized);
+    setNotifications(normalized);
 
-      const actionable = normalized.filter(
-        (n) => n.status === "approved" || n.status === "rejected"
-      );
+    const actionable = normalized.filter(
+      (n) => n.status === "approved" || n.status === "rejected"
+    );
 
-      const ids = actionable.map((n) => n._id);
-      const seen = JSON.parse(localStorage.getItem(seenKey(user.email))) || [];
-      const unseen = ids.filter((id) => !seen.includes(id));
+    const ids = actionable.map((n) => n._id);
+    const seen = JSON.parse(localStorage.getItem(seenKey(user.email))) || [];
+    const unseen = ids.filter((id) => !seen.includes(id));
 
-      setNotifCount(unseen.length);
-    } catch {
-      setNotifications([]);
-      setNotifCount(0);
-    }
-  };
+    setNotifCount(unseen.length);
+  } catch {
+    setNotifications([]);
+    setNotifCount(0);
+  }
+};
 
   useEffect(() => {
     loadNotifications();
@@ -107,7 +107,7 @@ const StudentLayout = ({ children }) => {
 
   const toggleProfile = () => setProfileOpen(!profileOpen);
 
-  /* ---------------- LOGOUT CONFIRMATION ---------------- */
+  /* ---------------- LOGOUT CONFIRMATION (ADDED) ---------------- */
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
 
   const handleLogout = () => setLogoutConfirmOpen(true);
@@ -149,6 +149,7 @@ const StudentLayout = ({ children }) => {
   /* ---------------- RENDER ---------------- */
   return (
     <div className={`student-dashboard-container ${sidebarOpen ? "sidebar-open" : ""}`}>
+
       {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
         <div className="sidebar-header">
@@ -176,10 +177,12 @@ const StudentLayout = ({ children }) => {
 
           <div className="right-controls">
 
+            {/* Dark Mode */}
             <div className="theme-switch" onClick={handleThemeToggle}>
               {darkMode ? <FaSun /> : <FaMoon />}
             </div>
 
+            {/* Notifications */}
             <div className="notif-container">
               <button className="bell-btn" onClick={handleBellClick}>
                 <FaBell />
@@ -209,6 +212,7 @@ const StudentLayout = ({ children }) => {
               )}
             </div>
 
+            {/* Profile */}
             <div className="profile" onClick={toggleProfile}>
               <div className="profile-avatar" style={{ background: getGradient(user.fullName) }}>
                 {userInitial}
@@ -216,6 +220,7 @@ const StudentLayout = ({ children }) => {
 
               {profileOpen && (
                 <div className="profile-dropdown">
+
                   <div className="profile-info">
                     <h4>{user.fullName}</h4>
                     <p className="college">{user.college || "College Student"}</p>
@@ -233,16 +238,60 @@ const StudentLayout = ({ children }) => {
                     <FaEdit /> Edit Profile
                   </button>
 
+                  {/* NOW calls confirmation modal */}
                   <button onClick={handleLogout}>
                     <FaSignOutAlt /> Logout
                   </button>
+
                 </div>
               )}
+
             </div>
+
           </div>
         </header>
 
+        {/*========= Page Content =========*/}
         {children}
+
+        {/* Edit Profile Modal */}
+        {editProfileOpen && (
+          <div className="modal-overlay">
+            <div className="edit-profile-modal">
+              <h3>Edit Profile</h3>
+
+              <label>Full Name</label>
+              <input name="fullName" value={editData.fullName} onChange={handleEditChange} />
+
+              <label>Email</label>
+              <input name="email" value={editData.email} onChange={handleEditChange} />
+
+              <label>College</label>
+              <input name="college" value={editData.college} onChange={handleEditChange} />
+
+              <div className="modal-buttons">
+                <button className="save-btn" onClick={handleSaveProfile}>Save</button>
+                <button className="cancel-btn" onClick={() => setEditProfileOpen(false)}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* LOGOUT CONFIRM MODAL */}
+        {logoutConfirmOpen && (
+          <div className="modal-overlay" onClick={cancelLogout}>
+            <div className="logout-modal" onClick={(e) => e.stopPropagation()}>
+              <h3>Confirm Logout</h3>
+              <p>Are you sure you want to logout?</p>
+
+              <div className="modal-buttons">
+                <button className="save-btn" onClick={confirmLogout}>Yes, Logout</button>
+                <button className="cancel-btn" onClick={cancelLogout}>No, Stay</button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </main>
     </div>
   );
