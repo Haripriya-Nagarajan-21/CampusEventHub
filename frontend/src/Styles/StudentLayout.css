@@ -46,11 +46,6 @@ body {
   color: var(--text);
   position: relative;
 }
-.student-title {
-  white-space: nowrap;
-  font-size: 16px;
-}
-
 .sidebar {
   position: fixed;  
   top: 0;
@@ -623,24 +618,8 @@ color: #0757db;
   z-index: 900;
   display: block;
 }
-.student-dashboard-container {
-  display: flex;
-  min-height: 100vh;
-}
 
-.sidebar {
-  background: #2563eb;
-  color: white;
-  height: 100vh;
-  transition: width 0.3s ease;
-  overflow: hidden;
-  flex-shrink: 0;
-  width: 250px; /* expanded */
-}
 
-.sidebar.collapsed {
-  width: 80px; /* collapsed width */
-}
 
 .sidebar-menu a {
   display: flex;
@@ -658,34 +637,19 @@ color: #0757db;
   transition: width 0.3s ease;
 }
 
-.sidebar.collapsed + .main-content {
-  /* automatically flex:1 handles shrinking */
-}
-/* ================= TOPBAR (FIXED & RESPONSIVE) ================= */
+
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  height: 60px;
-  padding: 0 14px;
-
-  background: var(--panel);
-  color: var(--text);
-
-  border-bottom: 1px solid #e5e7eb;
-  position: sticky;
-  top: 0;
-  z-index: 500;
+  flex-wrap: nowrap;   /* ⭐ THIS FIXES EVERYTHING */
 }
 
-/* title */
+
 .student-title {
-  font-size: 18px;
-  font-weight: 600;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 15px;
+  margin-left: 8px;
 }
 
 /* right controls */
