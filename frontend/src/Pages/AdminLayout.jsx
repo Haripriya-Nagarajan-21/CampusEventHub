@@ -88,37 +88,34 @@ const AdminLayout = ({
     setEditProfileOpen(false);
   };
 
-  useEffect(() => {
-    let mounted = true;
+ useEffect(() => {
+  let mounted = true;
 
-    const fetchNotifications = async () => {
-      try {
-        /* you can replace fetch with api.get later if needed */
-        const res = await fetch(
-          "http://localhost:5000/api/registrations/pending"
-        );
-        const data = await res.json();
+  const fetchNotifications = async () => {
+    try {
+      const { data } = await api.get("/registrations/pending");
 
-        if (mounted) {
-          setNotifications(data);
-          setNotifCount(data.length);
-        }
-      } catch {
-        if (mounted) {
-          setNotifications([]);
-          setNotifCount(0);
-        }
+      if (mounted) {
+        setNotifications(data);
+        setNotifCount(data.length);
       }
-    };
+    } catch {
+      if (mounted) {
+        setNotifications([]);
+        setNotifCount(0);
+      }
+    }
+  };
 
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 10000);
+  fetchNotifications();
 
-    return () => {
-      mounted = false;
-      clearInterval(interval);
-    };
-  }, []);
+  const interval = setInterval(fetchNotifications, 10000);
+
+  return () => {
+    mounted = false;
+    clearInterval(interval);
+  };
+}, []);
 
   useEffect(() => {
     const handleResize = () => {
