@@ -1,11 +1,13 @@
-// src/Pages/EventRegistration.jsx
+
+
+
+
 
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../Styles/EventRegistration.css";
-import api from "../config/axios"; // ✅ ONLY ADDED
 
 const EventRegistration = () => {
   const location = useLocation();
@@ -21,22 +23,20 @@ const EventRegistration = () => {
 
   const [registeredEvents, setRegisteredEvents] = useState([]);
 
-  /* =====================================================
-     ✅ ONLY CHANGED → axios
-  ===================================================== */
-  useEffect(() => {
-    if (user?.email) {
-      api
-        .get(`/registrations/student/${user.email}`)
-        .then((res) => {
-          const ids = (res.data.registrations || []).map(
-            (r) => r.eventId?._id || r.eventId
-          );
-          setRegisteredEvents(ids);
-        })
-        .catch(() => setRegisteredEvents([]));
-    }
-  }, [user?.email]);
+useEffect(() => {
+  if (user?.email) {
+    fetch(`${import.meta.env.VITE_API_URL}/registrations/student/${user.email}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const ids = (data.registrations || []).map(
+          (r) => r.eventId?._id || r.eventId
+        );
+        setRegisteredEvents(ids);
+      })
+      .catch(() => setRegisteredEvents([]));
+  }
+}, [user?.email]);
+
 
   useEffect(() => {
     if (!user) {
@@ -71,66 +71,68 @@ const EventRegistration = () => {
     setFormData((p) => ({ ...p, [name]: value }));
   };
 
-  /* =====================================================
-     ✅ ONLY CHANGED → axios
-  ===================================================== */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const eventId = event._id || event.id;
+  const eventId = event._id || event.id;
 
-    if (!eventId || !formData.name || !formData.email || !formData.college) {
-      toast.error("All fields are required!", { position: "top-center" });
-      return;
-    }
+  if (!eventId || !formData.name || !formData.email || !formData.college) {
+    toast.error("All fields are required!", { position: "top-center" });
+    return;
+  }
 
-    if (isAlreadyRegistered(eventId)) {
-      toast.warn("You have already registered for this event!", {
-        position: "top-center",
-      });
-      return;
-    }
+  if (isAlreadyRegistered(eventId)) {
+    toast.warn("You have already registered for this event!", {
+      position: "top-center",
+    });
+    return;
+  }
 
-    try {
-      const { data } = await api.post("/registrations", {
-        eventId,
-        name: formData.name,
-        email: formData.email,
-        college: formData.college,
-      });
-
-      if (data.success) {
-        toast.success(data.message || "🎉 Registered successfully!", {
-          position: "top-center",
-          autoClose: 1400,
-        });
-
-        setTimeout(() => {
-          navigate("/student-dashboard", { state: { justRegistered: true } });
-        }, 1400);
-      } else {
-        toast.error(data.message || "Registration failed!", {
-          position: "top-center",
-        });
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/registrations`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          eventId,
+          name: formData.name,
+          email: formData.email,
+          college: formData.college,
+        }),
       }
-    } catch (error) {
-      console.error("Network error:", error);
-      toast.error("Network error. Try again later!", {
+    );
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      toast.success(data.message || "🎉 Registered successfully!", {
+        position: "top-center",
+        autoClose: 1400,
+      });
+
+      setTimeout(() => {
+        navigate("/student-dashboard", { state: { justRegistered: true } });
+      }, 1400);
+    } else {
+      toast.error(data.message || "Registration failed!", {
         position: "top-center",
       });
     }
-  };
+  } catch (error) {
+    console.error("Network error:", error);
+    toast.error("Network error. Try again later!", {
+      position: "top-center",
+    });
+  }
+};
 
-  /* =====================================================
-     UI 100% SAME (NOT MODIFIED)
-  ===================================================== */
 
   return (
     <div className="er-registration-container">
       <ToastContainer />
       <div className="er-registration-card">
-
-        {/* LEFT */}
+        {/* LEFT: Event preview */}
         <div className="er-event-preview">
           <img
             src={
@@ -149,7 +151,7 @@ const EventRegistration = () => {
           </div>
         </div>
 
-        {/* RIGHT */}
+        {/* RIGHT: Registration form */}
         <form className="er-registration-form" onSubmit={handleSubmit}>
           <h3>Register for this Event</h3>
 
@@ -185,9 +187,7 @@ const EventRegistration = () => {
             className="er-submit-btn"
             disabled={isAlreadyRegistered(event._id)}
           >
-            {isAlreadyRegistered(event._id)
-              ? "Already Registered"
-              : "Register Now"}
+            {isAlreadyRegistered(event._id) ? "Already Registered" : "Register Now"}
           </button>
 
           <button
