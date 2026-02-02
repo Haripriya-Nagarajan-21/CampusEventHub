@@ -170,11 +170,11 @@ const StudentLayout = ({ children }) => {
 
       {/* Navbar */}
       <main className="main-content">
-        <header className="topbar">
-          <button className="menu-icon" onClick={toggleSidebar}>☰</button>
-
-          <h2 className="student-title">Student Dashboard</h2>
-
+       <header className="topbar">
+  <div className="topbar-left">
+    <button className="menu-icon" onClick={toggleSidebar}>☰</button>
+    <h2 className="student-title">Student Dashboard</h2>
+  </div>
           <div className="right-controls">
 
             {/* Dark Mode */}
