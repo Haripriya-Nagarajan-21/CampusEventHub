@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaStar, FaRegStar, FaTrash, FaTimes } from "react-icons/fa";
-
+import api from "../config/axios";
 import AdminLayout from "../Pages/AdminLayout";
 import "../Styles/AdminFeedback.css";
 
