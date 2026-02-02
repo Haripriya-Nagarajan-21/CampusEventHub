@@ -34,49 +34,45 @@ const AdminFeedbackPage = () => {
   // Fetch feedbacks
 const fetchFeedbacks = async () => {
   try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/feedback`);
-    const data = await res.json();
+    const { data } = await api.get("/feedback");
 
-    if (res.ok && data.success) {
+    if (data.success) {
       setFeedbacks(data.feedbacks);
     } else {
       toast.error(data.message || "Failed to fetch feedbacks");
     }
-  } catch (err) {
+  } catch {
     toast.error("Network error while fetching feedbacks");
   } finally {
     setLoading(false);
   }
 };
 
-  useEffect(() => {
-    fetchFeedbacks();
-  }, []);
+useEffect(() => {
+  fetchFeedbacks();
+}, []);
 
- const handleDelete = async () => {
+// Delete
+const handleDelete = async () => {
   if (!deleteTarget) return;
 
   try {
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/feedback/${deleteTarget._id}`,
-      { method: "DELETE" }
-    );
+    const { data } = await api.delete(`/feedback/${deleteTarget._id}`);
 
-    const data = await res.json();
-
-    if (res.ok && data.success) {
+    if (data.success) {
       toast.success(data.message);
       setFeedbacks(feedbacks.filter((f) => f._id !== deleteTarget._id));
     } else {
       toast.error(data.message || "Failed to delete");
     }
-  } catch (err) {
+  } catch {
     toast.error("Error deleting feedback");
   } finally {
     setShowModal(false);
     setDeleteTarget(null);
   }
 };
+
   const renderStars = (rating) =>
     Array.from({ length: 5 }, (_, i) =>
       i < rating ? (
