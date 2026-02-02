@@ -658,11 +658,6 @@ color: #0757db;
   align-items: center;
   gap: 14px;
 }
-.topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
 
 /* icons */
@@ -732,3 +727,16 @@ color: #0757db;
     max-width: 110px;
   }
 }
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0; 
+}
+
+.student-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
