@@ -46,26 +46,25 @@ body {
   color: var(--text);
   position: relative;
 }
-
-/* ================= Sidebar ================= */
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: -260px;
-  width: 250px;
-  height: 100vh;
-  background: var(--primary);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding-bottom: 16px;
-  border-radius: 6px;
-  transition: left 0.3s ease;
-  z-index: 1000;
+.student-title {
+  white-space: nowrap;
+  font-size: 16px;
 }
 
-.sidebar.open { left: 0; }
+.sidebar {
+  position: fixed;  
+  top: 0;
+  left: -250px;
+  width: 240px;
+  height: 100vh;
+  background: #2563eb;
+  z-index: 1200;
+  transition: left 0.3s ease;
+}
+
+.sidebar.open {
+  left: 0;
+}
 
 .sidebar-header {
   display: flex;
