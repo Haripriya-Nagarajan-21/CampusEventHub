@@ -1,6 +1,7 @@
 // src/Pages/AdminLayout.jsx
 
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FaBell,
   FaEdit,
@@ -9,10 +10,12 @@ import {
   FaMoon,
   FaSun,
 } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+
 import Sidebar from "../components/Sidebar";
-import api from "../config/axios"; // ✅ ONLY ADDED
 import "../Styles/AdminLayout.css";
+
+/* ✅ axios instance (for future API usage if needed) */
+import api from "../config/axios";
 
 const AdminLayout = ({
   children,
@@ -28,11 +31,10 @@ const AdminLayout = ({
   const [profileOpen, setProfileOpen] = useState(false);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
-
   const [notifications, setNotifications] = useState([]);
   const [notifCount, setNotifCount] = useState(0);
 
-  /* ================= DARK MODE ================= */
+  /* ============================ DARK MODE ============================ */
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
@@ -48,7 +50,6 @@ const AdminLayout = ({
     document.documentElement.classList.toggle("admin-dark", next);
   };
 
-  /* ================= USER ================= */
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
     return storedUser
@@ -56,15 +57,16 @@ const AdminLayout = ({
       : { fullName: "Admin", email: "", college: "" };
   });
 
-  const [editData, setEditData] = useState(user);
+  const [editData, setEditData] = useState({
+    fullName: user.fullName,
+    email: user.email,
+    college: user.college,
+  });
 
-  /* ================= SIDEBAR ================= */
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const closeSidebar = () => setSidebarOpen(false);
-
-  /* ================= PROFILE ================= */
+  const toggleNotif = () => setNotifOpen(!notifOpen);
   const toggleProfile = () => setProfileOpen(!profileOpen);
-
   const handleLogout = () => setLogoutConfirmOpen(true);
 
   const confirmLogout = () => {
@@ -86,18 +88,20 @@ const AdminLayout = ({
     setEditProfileOpen(false);
   };
 
-  /* =====================================================
-     ✅ ONLY CHANGE: fetch → axios api
-  ===================================================== */
   useEffect(() => {
     let mounted = true;
 
     const fetchNotifications = async () => {
       try {
-        const res = await api.get("/registrations/pending"); // ✅ changed
+        /* you can replace fetch with api.get later if needed */
+        const res = await fetch(
+          "http://localhost:5000/api/registrations/pending"
+        );
+        const data = await res.json();
+
         if (mounted) {
-          setNotifications(res.data || []);
-          setNotifCount(res.data?.length || 0);
+          setNotifications(data);
+          setNotifCount(data.length);
         }
       } catch {
         if (mounted) {
@@ -116,7 +120,6 @@ const AdminLayout = ({
     };
   }, []);
 
-  /* ================= RESPONSIVE ================= */
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 1100) setSidebarOpen(true);
@@ -133,9 +136,6 @@ const AdminLayout = ({
     navigate("/admin/registrations");
   };
 
-  const toggleNotif = () => setNotifOpen(!notifOpen);
-
-  /* ================= AVATAR ================= */
   const getGradient = (name) => {
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
@@ -148,7 +148,6 @@ const AdminLayout = ({
 
   const userInitial = user.fullName.charAt(0).toUpperCase();
 
-  /* ================= UI (UNCHANGED) ================= */
   return (
     <div className={`dashboard-container ${sidebarOpen ? "sidebar-open" : ""}`}>
       <Sidebar
@@ -169,7 +168,6 @@ const AdminLayout = ({
           <h2 className="admin-title">Admin Dashboard</h2>
 
           <div className="right-controls">
-
             <div className="theme-switch" onClick={handleThemeToggle}>
               {darkMode ? <FaSun /> : <FaMoon />}
             </div>
@@ -177,6 +175,46 @@ const AdminLayout = ({
             <div className="notification" onClick={toggleNotif}>
               <FaBell />
               {notifCount > 0 && <span className="notif-count">{notifCount}</span>}
+
+              {notifOpen && (
+                <div className="notif-dropdown">
+                  {notifCount > 0 ? (
+                    <>
+                      {notifications.map((notif, i) => (
+                        <div
+                          key={i}
+                          className="notif-item"
+                          onClick={handleNotifClick}
+                        >
+                          <div className="notif-top">
+                            <strong>{notif.studentName}</strong>
+                            <span className="notif-status">
+                              <FaCheckCircle /> Registered
+                            </span>
+                          </div>
+
+                          <p className="notif-event">
+                            Event: <b>{notif.eventName}</b>
+                          </p>
+
+                          <small>
+                            🕒 {new Date(notif.timestamp).toLocaleString()}
+                          </small>
+                        </div>
+                      ))}
+
+                      <div
+                        className="view-all"
+                        onClick={handleNotifClick}
+                      >
+                        View All Pending Approvals →
+                      </div>
+                    </>
+                  ) : (
+                    <div className="no-notif">No new notifications</div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="profile" onClick={toggleProfile}>
@@ -186,12 +224,106 @@ const AdminLayout = ({
               >
                 {userInitial}
               </div>
-            </div>
 
+              {profileOpen && (
+                <div className="profile-dropdown">
+                  <div className="profile-info">
+                    <h4>{user.fullName}</h4>
+                    <p>{user.college || "College Admin"}</p>
+                    <p className="email">{user.email}</p>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setEditProfileOpen(true);
+                      setProfileOpen(false);
+                      setEditData(user);
+                    }}
+                  >
+                    <FaEdit /> Edit Profile
+                  </button>
+
+                  <button onClick={handleLogout}>
+                    <FaSignOutAlt /> Logout
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </header>
 
         {children}
+
+        {editProfileOpen && (
+          <div
+            className="modal-overlay"
+            onClick={() => setEditProfileOpen(false)}
+          >
+            <div
+              className="edit-profile-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3>Edit Profile</h3>
+
+              <label>Full Name</label>
+              <input
+                type="text"
+                name="fullName"
+                value={editData.fullName}
+                onChange={handleEditChange}
+              />
+
+              <label>Email</label>
+              <input
+                type="email"
+                name="email"
+                value={editData.email}
+                onChange={handleEditChange}
+              />
+
+              <label>College</label>
+              <input
+                type="text"
+                name="college"
+                value={editData.college}
+                onChange={handleEditChange}
+              />
+
+              <div className="modal-buttons">
+                <button className="save-btn" onClick={handleSaveProfile}>
+                  Save
+                </button>
+                <button
+                  className="cancel-btn"
+                  onClick={() => setEditProfileOpen(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {logoutConfirmOpen && (
+          <div className="modal-overlay" onClick={cancelLogout}>
+            <div
+              className="logout-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3>Confirm Logout</h3>
+              <p>Are you sure you want to logout?</p>
+
+              <div className="modal-buttons">
+                <button className="save-btn" onClick={confirmLogout}>
+                  Yes, Logout
+                </button>
+                <button className="cancel-btn" onClick={cancelLogout}>
+                  No, Stay
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
