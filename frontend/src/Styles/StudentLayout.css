@@ -658,6 +658,12 @@ color: #0757db;
   align-items: center;
   gap: 14px;
 }
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 
 /* icons */
 .theme-switch,
