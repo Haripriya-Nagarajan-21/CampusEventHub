@@ -1,8 +1,4 @@
 
-
-
-
-
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -89,23 +85,14 @@ const handleSubmit = async (e) => {
   }
 
   try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/registrations`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          eventId,
-          name: formData.name,
-          email: formData.email,
-          college: formData.college,
-        }),
-      }
-    );
+    const { data } = await api.post("/registrations", {
+      eventId,
+      name: formData.name,
+      email: formData.email,
+      college: formData.college,
+    });
 
-    const data = await response.json();
-
-    if (response.ok && data.success) {
+    if (data.success) {
       toast.success(data.message || "🎉 Registered successfully!", {
         position: "top-center",
         autoClose: 1400,
@@ -121,12 +108,12 @@ const handleSubmit = async (e) => {
     }
   } catch (error) {
     console.error("Network error:", error);
-    toast.error("Network error. Try again later!", {
+
+    toast.error("Server waking up... please try again", {
       position: "top-center",
     });
   }
 };
-
 
   return (
     <div className="er-registration-container">
@@ -134,13 +121,9 @@ const handleSubmit = async (e) => {
       <div className="er-registration-card">
         {/* LEFT: Event preview */}
         <div className="er-event-preview">
-          <img
-            src={
-              event.image ||
-              "https://img.freepik.com/free-vector/event-concept-illustration_114360-931.jpg"
-            }
-            alt={event.title || "event"}
-          />
+          <div className="er-img-wrap">
+         <img src={event.image} alt={event.title} />
+        </div>
           <h2>{event.title}</h2>
           <p className="er-college">{event.collegeName}</p>
           <p className="er-desc">{event.description}</p>
