@@ -1,11 +1,11 @@
+
 import React, { useEffect, useState, useMemo } from "react";
 import "../Styles/Registrations.css";
 import AdminLayout from "../Pages/AdminLayout";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import api from "../config/axios"; // ✅ ONLY ADDED (axios instance)
-
+import api from "../config/axios";
 const RegistrationsPage = () => {
   const [registrations, setRegistrations] = useState([]);
   const navigate = useNavigate();
@@ -15,46 +15,41 @@ const RegistrationsPage = () => {
     fetchRegistrations();
   }, [location.pathname]);
 
-  /* =====================================================
-     ✅ ONLY CHANGED → using api instead of fetch
-  ====================================================== */
   const fetchRegistrations = async () => {
-    try {
-      const res = await api.get("/registrations"); // ✅ changed
-      const data = res.data;
-      setRegistrations(data.registrations || data || []);
-    } catch (error) {
-      console.error("Error fetching registrations:", error);
-      setRegistrations([]);
-    }
-  };
+  try {
+    const res = await api.get("/registrations"); // ✅ axios
+    const data = res.data;
 
-  /* =====================================================
-     ✅ ONLY CHANGED → using api instead of fetch
-  ====================================================== */
-  const updateStatus = async (id, status) => {
-    try {
-      const res = await api.put(`/registrations/${id}/status`, { status }); // ✅ changed
-      const data = res.data;
+    setRegistrations(data.registrations || data || []);
+  } catch (error) {
+    console.error("Error fetching registrations:", error);
+    setRegistrations([]);
+  }
+};
 
-      if (data.success) {
-        fetchRegistrations();
+const updateStatus = async (id, status) => {
+  try {
+    const { data } = await api.put(
+      `/registrations/${id}/status`,
+      { status } // axios auto JSON.stringify
+    );
 
-        if (status === "Approved") {
-          toast.success("Registration approved successfully!");
-        } else if (status === "Rejected") {
-          toast.error("❌ Registration rejected!");
-        }
-      } else {
-        toast.warn(data.message || "⚠️ Error updating status");
+    if (data.success) {
+      fetchRegistrations();
+
+      if (status === "Approved") {
+        toast.success("Registration approved successfully!");
+      } else if (status === "Rejected") {
+        toast.error("❌ Registration rejected!");
       }
-    } catch (error) {
-      console.error("Error updating status:", error);
-      toast.error("❌ Failed to update status");
+    } else {
+      toast.warn(data.message || "⚠️ Error updating status");
     }
-  };
-
-  /* ===================================================== */
+  } catch (error) {
+    console.error("Error updating status:", error);
+    toast.error("❌ Failed to update status");
+  }
+};
 
   const analytics = useMemo(() => {
     const total = registrations.length;
@@ -74,6 +69,7 @@ const RegistrationsPage = () => {
     >
       <div className="panels">
 
+        
         <h3>Registration Analytics</h3>
 
         <div className="analytics-container">
@@ -107,7 +103,6 @@ const RegistrationsPage = () => {
                 📋 REGISTRATIONS TABLE
         ====================================================== */}
         <h3>Registrations</h3>
-
         <div className="table-wrapper">
           <table className="registrations-table">
             <thead>
@@ -162,7 +157,6 @@ const RegistrationsPage = () => {
             </tbody>
           </table>
         </div>
-
       </div>
 
       <ToastContainer theme="colored" position="top-right" autoClose={2500} />
