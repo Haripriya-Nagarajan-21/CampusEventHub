@@ -664,14 +664,132 @@ color: #0757db;
 }
 
 .topbar {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
   height: 60px;
-  padding: 0 20px;
-  background: #fff;
+  padding: 0 16px;
+  background: var(--panel);
   border-bottom: 1px solid #ddd;
   width: 100%;
+}
+
+.menu-icon {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.student-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+
+.right-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-switch {
+  color: var(--text);
+}
+
+.theme-switch svg {
+  color: inherit;
+}
+
+.notif-container {
+  position: relative;
+}
+
+.bell-btn {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  padding: 6px;
+}
+
+.bell-btn svg {
+  color: inherit;
+}
+
+.badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: #ef4444;
+  color: #fff;
+  border-radius: 999px;
+  font-size: 10px;
+  padding: 2px 5px;
+  font-weight: 600;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 6px 14px rgba(2, 6, 23, 0.2);
+}
+
+:root.dark .menu-icon,
+:root.dark .theme-switch,
+:root.dark .bell-btn {
+  color: var(--text);
+}
+
+@media (max-width: 640px) {
+  .topbar {
+    height: 56px;
+    padding: 0 10px;
+    gap: 8px;
+  }
+
+  .student-title {
+    font-size: 16px;
+  }
+
+  .right-controls {
+    gap: 8px;
+  }
+
+  .profile-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
 }
 
 /* ================= Mobile Navbar ================= */
