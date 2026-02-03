@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../Styles/EventRegistration.css";
+import api from "../config/axios";
 
 const EventRegistration = () => {
   const location = useLocation();
@@ -18,22 +19,27 @@ const EventRegistration = () => {
   });
 
   const [registeredEvents, setRegisteredEvents] = useState([]);
-
 useEffect(() => {
-  if (user?.email) {
-    fetch(`${import.meta.env.VITE_API_URL}/registrations/student/${user.email}`)
-      .then((res) => res.json())
-      .then((data) => {
-        const ids = (data.registrations || []).map(
-          (r) => r.eventId?._id || r.eventId
-        );
-        setRegisteredEvents(ids);
-      })
-      .catch(() => setRegisteredEvents([]));
-  }
+  if (!user?.email) return;
+
+  const load = async () => {
+    try {
+      const { data } = await api.get(
+        `/registrations/student/${user.email}`
+      );
+
+      const ids = (data.registrations || []).map(
+        (r) => r.eventId?._id || r.eventId
+      );
+
+      setRegisteredEvents(ids);
+    } catch {
+      setRegisteredEvents([]);
+    }
+  };
+
+  load();
 }, [user?.email]);
-
-
   useEffect(() => {
     if (!user) {
       toast.warn("Please log in to continue!", { position: "top-center" });
