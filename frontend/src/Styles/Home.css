@@ -4,11 +4,11 @@
   --bg-alt: #f9fafb;
   --text: #0f172a;
   --muted: #6b7280;
-  --primary: #007bff;
+  --primary: #1d4ed8;
   --primary-soft: #e0edff;
   --nav-bg: rgba(255, 255, 255, 0.9);
   --card-bg: #ffffff;
-  --footer-bg: #9cc9f9;
+  --footer-bg: #eef6ff;
 }
 
 /* Dark mode variables */
@@ -105,7 +105,8 @@
 }
 
 /* Theme button */
-.theme-toggle-btn {
+.theme-toggle-btn,
+.home-theme-icon {
   border: none;
   background: transparent;
   width: 34px;
@@ -120,13 +121,15 @@
   font-size: 16px;
 }
 
-.theme-toggle-btn svg {
+.theme-toggle-btn svg,
+.home-theme-icon svg {
   color: var(--primary);
 }
 
-.theme-toggle-btn:hover {
+.theme-toggle-btn:hover,
+.home-theme-icon:hover {
   background: rgba(148, 163, 184, 0.15);
-  box-shadow: 0 0 12px rgba(0, 212, 255, 0.5);
+  box-shadow: 0 0 10px rgba(29, 78, 216, 0.35);
   transform: translateY(-1px);
 }
 
@@ -191,7 +194,7 @@
 .btn-outline:hover {
   background: var(--primary);
   color: #ffffff;
-  box-shadow: 0 0 14px rgba(0, 212, 255, 0.7);
+  box-shadow: 0 8px 18px rgba(29, 78, 216, 0.35);
   transform: translateY(-1px);
 }
 
@@ -245,7 +248,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 80px 60px;
-  background: linear-gradient(135deg, var(--primary-soft), #ffffff);
+  background:
+    radial-gradient(1200px 400px at 10% -10%, rgba(29, 78, 216, 0.08), transparent 60%),
+    linear-gradient(135deg, var(--primary-soft), #ffffff);
 }
 
 /* Dark Hero */
@@ -267,6 +272,7 @@
   font-size: 50px;
   font-weight: 700;
   line-height: 1.2;
+  letter-spacing: -0.3px;
 }
 
 .hero-left h1 span {
@@ -351,7 +357,7 @@
 .features {
   padding: 70px 60px;
   text-align: center;
-  background: var(--bg-alt);
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
 }
 
 .features h2 {
@@ -407,7 +413,7 @@
   text-align: center;
   padding: 25px;
   background: var(--footer-bg);
-  color: #555;
+  color: #4b5563;
 }
 
 .home-wrapper.dark .footer {
