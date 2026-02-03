@@ -46,20 +46,26 @@ body {
   color: var(--text);
   position: relative;
 }
+
+/* ================= Sidebar ================= */
 .sidebar {
-  position: fixed;  
+  position: fixed;
   top: 0;
-  left: -250px;
-  width: 240px;
+  left: -260px;
+  width: 250px;
   height: 100vh;
-  background: #2563eb;
-  z-index: 1200;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-bottom: 16px;
+  border-radius: 6px;
   transition: left 0.3s ease;
+  z-index: 1000;
 }
 
-.sidebar.open {
-  left: 0;
-}
+.sidebar.open { left: 0; }
 
 .sidebar-header {
   display: flex;
@@ -618,8 +624,24 @@ color: #0757db;
   z-index: 900;
   display: block;
 }
+.student-dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
 
+.sidebar {
+  background: #2563eb;
+  color: white;
+  height: 100vh;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  flex-shrink: 0;
+  width: 250px; /* expanded */
+}
 
+.sidebar.collapsed {
+  width: 80px; /* collapsed width */
+}
 
 .sidebar-menu a {
   display: flex;
@@ -637,106 +659,57 @@ color: #0757db;
   transition: width 0.3s ease;
 }
 
+.sidebar.collapsed + .main-content {
+  /* automatically flex:1 handles shrinking */
+}
 
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: nowrap;   /* ⭐ THIS FIXES EVERYTHING */
+  height: 60px;
+  padding: 0 20px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  width: 100%;
 }
 
-
-.student-title {
-  white-space: nowrap;
-  font-size: 15px;
-  margin-left: 8px;
-}
-
-/* right controls */
-.right-controls {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-
-/* icons */
-.theme-switch,
-.bell-btn,
-.profile-avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 38px;
-  height: 38px;
-
-  border-radius: 50%;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-/* icon hover */
-.theme-switch:hover,
-.bell-btn:hover {
-  background: rgba(37, 99, 235, 0.1);
-}
-
-/* icons color fix */
-.theme-switch svg,
-.bell-btn svg {
-  font-size: 18px;
-  color: var(--text);
-}
-
-/* dark mode visibility */
-:root.dark .theme-switch svg,
-:root.dark .bell-btn svg {
-  color: #ffffff;
-}
-
-/* ================= MOBILE FIX ================= */
-@media (max-width: 768px) {
-
-  .topbar {
-    padding: 0 10px;
+/* ================= Mobile Navbar ================= */
+@media (max-width: 640px) {
+  .navbar {
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
   }
 
-  .student-title {
+  .nav-left {
+    min-width: 0;
+    gap: 10px;
+  }
+
+  .menu-icon {
+    font-size: 22px;
+  }
+
+  .logo {
     font-size: 15px;
-    max-width: 140px; /* prevents overflow */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .right-controls {
-    gap: 8px;
+  .nav-center {
+    display: none;
   }
 
-  .theme-switch,
-  .bell-btn,
-  .profile-avatar {
-    width: 34px;
-    height: 34px;
+  .notif-wrapper {
+    margin-right: 6px;
+  }
+
+  .notifications-dropdown {
+    right: 12px;
+    left: 12px;
+    width: auto;
   }
 }
-
-/* EXTRA SMALL PHONES */
-@media (max-width: 420px) {
-
-  .student-title {
-    font-size: 14px;
-    max-width: 110px;
-  }
-}
-.topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0; 
-}
-
-.student-title {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
