@@ -770,6 +770,13 @@ color: #0757db;
   color: var(--text);
 }
 
+:root.dark .topbar .bell-btn,
+:root.dark .topbar .bell-btn svg,
+:root.dark .topbar .theme-switch,
+:root.dark .topbar .theme-switch svg {
+  color: var(--text);
+}
+
 @media (max-width: 640px) {
   .topbar {
     height: 56px;
