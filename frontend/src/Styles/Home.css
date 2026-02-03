@@ -360,10 +360,18 @@
   background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
 }
 
+.home-wrapper.dark .features {
+  background: linear-gradient(180deg, #030712 0%, #020617 100%);
+}
+
 .features h2 {
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 40px;
+}
+
+.home-wrapper.dark .features h2 {
+  color: var(--text);
 }
 
 .features-grid {
@@ -383,7 +391,9 @@
 }
 
 .home-wrapper.dark .feature-card {
-  box-shadow: 0 0 25px rgba(15, 23, 42, 0.9);
+  background: #0b1220;
+  border-color: rgba(148, 163, 184, 0.22);
+  box-shadow: 0 0 25px rgba(2, 6, 23, 0.9);
 }
 
 .feature-card:hover {
