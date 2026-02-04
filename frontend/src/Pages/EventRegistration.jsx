@@ -114,72 +114,46 @@ const EventRegistration = () => {
 
   return (
     <div className="er-registration-container">
-      <ToastContainer />
+  <ToastContainer />
 
-      <div className="er-registration-card">
-        {/* Event Preview */}
-        <div className="er-event-preview">
-          <img
-            src={
-              event.image ||
-              "https://img.freepik.com/free-vector/event-concept-illustration_114360-931.jpg"
-            }
-            alt={event.title}
-          />
+  <div className="er-registration-card">
 
-          <h2>{event.title}</h2>
-          <p>{event.description}</p>
-          <p>📅 {event.date}</p>
-          <p>🕒 {event.time}</p>
-        </div>
+    <div className="er-event-preview">
+      <div className="er-img-wrap">
+        <img
+          src={event.image || "https://img.freepik.com/free-vector/event-concept-illustration_114360-931.jpg"}
+          alt={event.title}
+        />
+      </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Name"
-            required
-          />
-
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Email"
-            required
-          />
-
-          <input
-            type="text"
-            name="college"
-            value={formData.college}
-            onChange={handleChange}
-            placeholder="College"
-            required
-          />
-
-          <button
-            type="submit"
-            disabled={isAlreadyRegistered(event._id)}
-          >
-            {isAlreadyRegistered(event._id)
-              ? "Already Registered"
-              : "Register Now"}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => navigate("/student-dashboard")}
-          >
-            Back
-          </button>
-        </form>
+      <h2>{event.title}</h2>
+      <p className="er-desc">{event.description}</p>
+      <div className="er-event-meta">
+        <p>📅 {event.date}</p>
+        <p>🕒 {event.time}</p>
       </div>
     </div>
+
+    <form className="er-registration-form" onSubmit={handleSubmit}>
+      <h3>Register for this Event</h3>
+
+      <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" required />
+
+      <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" required />
+
+      <input type="text" name="college" value={formData.college} onChange={handleChange} placeholder="College" required />
+
+      <button className="er-submit-btn" type="submit" disabled={isAlreadyRegistered(event._id)}>
+        {isAlreadyRegistered(event._id) ? "Already Registered" : "Register Now"}
+      </button>
+
+      <button className="er-back-btn" type="button" onClick={() => navigate("/student-dashboard")}>
+        Back
+      </button>
+    </form>
+
+  </div>
+</div>
   );
 };
 
