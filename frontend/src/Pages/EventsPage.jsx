@@ -198,42 +198,45 @@ const handleDeleteEvent = async () => {
   // -----------------------
   // Admin: view registrations
   // -----------------------
-  const handleViewRegistrations = async (event) => {
-    setSelectedEvent(event);
-    setShowRegsModal(true);
-    setRegsLoading(true);
-    setEventRegs([]);
-    setRegSearch("");
-    setRegPage(1);
+const handleViewRegistrations = async (event) => {
+  setSelectedEvent(event);
+  setShowRegsModal(true);
+  setRegsLoading(true);
+  setEventRegs([]);
+  setRegSearch("");
+  setRegPage(1);
 
-    try {
-      const res = await fetch("http://localhost:5000/api/registrations");
-      const data = await res.json();
-      let allRegs = [];
+  try {
+    const res = await api.get("/registrations");   // ✅ use axios config
+    const data = res.data;
 
-      if (data && data.success && Array.isArray(data.registrations)) {
-        allRegs = data.registrations;
-      } else if (Array.isArray(data)) {
-        allRegs = data;
-      } else {
-        allRegs = [];
-      }
+    let allRegs = [];
 
-      const eventId = event._id || event.id;
-      const filtered = allRegs.filter((r) => {
-        const rid = r.eventId?._id || r.eventId || (r.eventId && r.eventId.id) || r.event;
-        const ridStr = typeof rid === "object" ? (rid._id || rid.id) : rid;
-        return String(ridStr) === String(eventId) || (r.eventId && r.eventId._id && String(r.eventId._id) === String(eventId));
-      });
-
-      setEventRegs(filtered);
-    } catch (err) {
-      console.error("Failed to load registrations", err);
-      setEventRegs([]);
-    } finally {
-      setRegsLoading(false);
+    if (data?.success && Array.isArray(data.registrations)) {
+      allRegs = data.registrations;
+    } else if (Array.isArray(data)) {
+      allRegs = data;
+    } else {
+      allRegs = [];
     }
-  };
+
+    const eventId = event._id || event.id;
+
+    const filtered = allRegs.filter((r) => {
+      const rid = r.eventId?._id || r.eventId || r.event;
+      const ridStr = typeof rid === "object" ? (rid._id || rid.id) : rid;
+      return String(ridStr) === String(eventId);
+    });
+
+    setEventRegs(filtered);
+  } catch (err) {
+    console.error("Failed to load registrations", err);
+    notifyError("Could not load registrations");
+    setEventRegs([]);
+  } finally {
+    setRegsLoading(false);
+  }
+};
 
   const closeRegsModal = () => {
     setShowRegsModal(false);
