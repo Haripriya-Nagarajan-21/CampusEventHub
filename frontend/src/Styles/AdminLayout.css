@@ -696,9 +696,13 @@ color: #0757db;
   padding: 6px 8px;
   border-radius: 50%;
   transition: 0.2s;
+  color: #0757db;
 }
 .theme-switch:hover {
   background: rgba(56, 189, 248, 0.2);
+}
+.admin-dark .theme-switch {
+  color: #e2e8f0;
 }
 
 /* 🏷️ ADMIN TITLE */
