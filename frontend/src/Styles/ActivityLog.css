@@ -164,16 +164,16 @@ html.admin-dark .panel h3 {
 }
 
 html.admin-dark .activity-log-table {
-  background: #0f172a;
+  background: #0f172a !important;
 }
 
 html.admin-dark .activity-log-table tbody tr {
-  background: #0f172a;
+  background: #0f172a !important;
 }
 
 html.admin-dark .activity-log-table td {
-  color: #e2e8f0;
-  border-bottom: 1px solid #1f2937;
+  color: #e2e8f0 !important;
+  border-bottom: 1px solid #1f2937 !important;
 }
 
 html.admin-dark .activity-log-table td:first-child {
