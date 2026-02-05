@@ -699,4 +699,12 @@ html.admin-dark .admin-title{
 .header-modern.show-search .search { display: block; max-width: 100%; margin: 6px 0; }
 .header-modern.show-search .brand .title,
 .header-modern.show-search .right-controls { display: none; }
+html.admin-dark .logout-modal {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+html.admin-dark .logout-modal h3,
+html.admin-dark .logout-modal p {
+  color: #e2e8f0 !important;
+}
 
