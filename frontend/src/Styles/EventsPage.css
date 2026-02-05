@@ -660,3 +660,57 @@ body.modal-open .topbar {
   .event-info p { font-size: 0.85rem; }
   .btn { padding: 7px 12px; font-size: 0.85rem; }
 }
+
+/* ===========================
+   DARK MODE (Admin)
+=========================== */
+html.admin-dark .events-page-student,
+html.admin-dark .events-container {
+  background-color: #0f172a;
+}
+
+html.admin-dark .events-header h2 {
+  color: #e2e8f0;
+}
+
+html.admin-dark .search-input {
+  background: #0f172a;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+html.admin-dark .search-input::placeholder {
+  color: #94a3b8;
+}
+
+html.admin-dark .filter-btn {
+  background: #1e293b;
+  border-color: #38bdf8;
+  color: #e2e8f0;
+}
+
+html.admin-dark .filter-btn.active,
+html.admin-dark .filter-btn:hover {
+  background-color: #38bdf8;
+  color: #0f172a;
+}
+
+html.admin-dark .event-card {
+  background: #1e293b;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+html.admin-dark .event-info h3 {
+  color: #e2e8f0;
+}
+
+html.admin-dark .event-info p,
+html.admin-dark .no-events {
+  color: #94a3b8;
+}
+
+html.admin-dark .badge {
+  background: #0f172a;
+  color: #e2e8f0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
