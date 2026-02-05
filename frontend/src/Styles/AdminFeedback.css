@@ -382,3 +382,49 @@ html.admin-dark .feedback-delete-modal p {
 html.admin-dark .feedback-delete-modal .modal-warning {
   color: #f87171;
 }
+
+html.admin-dark .analytics-card {
+  background: #020617 !important;
+  border: 1px solid #1e293b !important;
+}
+
+html.admin-dark .analytics-card h4 {
+  color: #cbd5f5 !important;   /* Labels: Total Feedback, Avg Rating */
+  opacity: 0.9;
+}
+
+html.admin-dark .analytics-card p {
+  color: #60a5fa !important;   /* Numbers */
+  font-weight: 700;
+}
+
+/* Table row hover fix */
+html.admin-dark .feedback-table tbody tr:hover {
+  background: #020617 !important;
+}
+
+/* Mobile stacked table cards */
+@media (max-width: 768px) {
+  html.admin-dark .feedback-table tbody tr {
+    background: #020617 !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+  }
+
+  html.admin-dark .feedback-table td::before {
+    color: #60a5fa !important; /* Mobile labels */
+  }
+}
+
+/* Empty state text */
+html.admin-dark .feedback-empty {
+  color: #60a5fa !important;
+}
+
+/* Modal buttons in dark mode */
+html.admin-dark .modal-cancel-btn {
+  background: #334155 !important;
+}
+
+html.admin-dark .modal-delete-btn {
+  background: #ef4444 !important;
+}
