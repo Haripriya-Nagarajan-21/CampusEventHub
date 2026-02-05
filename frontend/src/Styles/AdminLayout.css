@@ -76,8 +76,8 @@
 }
 
 .topbar {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
   align-items: center;
   background-color: #ffffff;
   padding: 12px 20px;
@@ -100,6 +100,7 @@
   display: flex;
   align-items: center;
   gap: 25px;
+  justify-self: end;
 }
 
 
@@ -417,334 +418,24 @@ color: #0757db;
   box-shadow: 0 6px 20px rgba(7, 87, 219, 0.3);
 }
 
-/* Dropdown */
-.profile-dropdown {
-  position: absolute;
-  top: 60px;
-  right: 0;
-  width: 280px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(25px);
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  padding: 18px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  animation: fadeIn 0.25s ease-in-out;
-  z-index: 999;
-}
-
-/* Profile info */
-.profile-info {
-  text-align: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  padding-bottom: 12px;
-  margin-bottom: 12px;
-}
-
-.profile-info h4 {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 4px;
-}
-
-.profile-info p {
-  font-size: 0.88rem;
-  color: #555;
-  margin-bottom: 3px;
-}
-
-.profile-info .college {
-  font-size: 0.82rem;
-  color: #777;
-}
-
-/* Buttons */
-.profile-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.profile-actions button {
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  background: linear-gradient(135deg, #f3f4f6, #ffffff);
-  color: #333;
-  transition: all 0.3s ease;
-}
-
-.profile-actions button:hover {
-  background: linear-gradient(135deg, #0757db, #3b82f6);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(7, 87, 219, 0.2);
-}
-
-/* Special for logout */
-.profile-actions .logout-btn {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: #fff;
-  margin-left: 10%;
-  width:100%;
-  
-}
-
-.profile-actions .logout-btn:hover {
-  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
-  transform: translateY(-2px);
-}
-
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.profile-avatar {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-  transition: all 0.3s ease-in-out;
-}
-
-.profile-avatar:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-}
-
-/* ===========================
-   RESPONSIVE
-=========================== */
-@media (max-width: 1024px) {
-  .dashboard-container.sidebar-open .main-content {
-    margin-left: 0;
-  }
-
-  .sidebar {
-    position: fixed;
-    z-index: 1000;
-  }
-
-  .topbar {
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .right-controls {
-    gap: 15px;
-  }
-}
-
-@media (max-width: 600px) {
-  .main-content {
-    padding: 12px;
-  }
-
-  .topbar {
-    padding: 10px 15px;
-  }
-
-  .notif-dropdown,
-  .profile-dropdown {
-    width: 90vw;
-    right: 5%;
-  }
-
-  .edit-profile-modal,
-  .logout-modal {
-    width: 80%;
-    padding: 6px 10px;
-  }
-}
-
-/* ===========================
-   ANIMATIONS
-=========================== */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes scaleUp {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-/* Fix sidebar click issue */
-.sidebar {
-  position: fixed;
-  z-index: 3000 !important;
-}
-
-.topbar {
-  z-index: 100 !important;
-}
-
-.main-content {
-  position: relative;
-  z-index: 0 !important;
-}
-/* ------------------------------------------
-   PROFESSIONAL ADMIN NOTIFICATION CARD
--------------------------------------------*/
-.notif-dropdown {
-  padding: 0;
-  border-radius: 14px;
-  width: 300px;
-  height: 180px;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(255,255,255,0.55);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.15);
-  animation: floatUp 0.18s ease-out;
-  position: absolute !important;
-}
-
-.notif-item {
-  padding: 12px 16px !important;
-  border-bottom: 1px solid rgba(0,0,0,0.05) !important;
-  cursor: pointer;
-}
-
-
-.notif-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.notif-status {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(37,99,235,0.12);
-  color: #0757db;
-  padding: 2px 8px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.notif-event {
-  font-size: 15px;
-  margin-top: 20px;
-  color: #374151;
-}
-.view-all {
-  margin-top: 10px;
-  padding: 10px 12px !important;
-  font-weight: 400;
-  text-align: center;
-  color: #eeeff2;
-  cursor: pointer;
-  background: rgba(225, 225, 230, 0.08);
-}
-
-
-
-@keyframes floatUp {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Prevent layout shift on click */
-.notification, .profile {
-  position: relative;
-  z-index: 500 !important;
-}
-/* 🌙 DARK MODE */
-.admin-dark body,
-.admin-dark .dashboard-container,
-.admin-dark .main-content {
-  background: #0f172a !important;
-  color: #e2e8f0 !important;
-}
-.admin-dark .topbar,
-.admin-dark .panel,
-.admin-dark .card,
-.admin-dark .activity-table,
-.admin-dark .sidebar {
-  background: #1e293b !important;
-  color: #e2e8f0 !important;
-  border-color: #334155 !important;
-}
-.admin-dark .sidebar-menu li:hover,
-.admin-dark .sidebar-menu li.active {
-  background: #334155 !important;
-  border-left: 4px solid #38bdf8 !important;
-}
-.admin-dark .create-event-btn {
-  background: #38bdf8 !important;
-  color: #fff !important;
-}
-
-/* 🌙 Moon/Sun Icon */
-.theme-switch {
-  cursor: pointer;
-  font-size: 18px;
-  padding: 6px 8px;
-  border-radius: 50%;
-  transition: 0.2s;
-  color: #0757db;
-}
-.theme-switch:hover {
-  background: rgba(56, 189, 248, 0.2);
-}
-.admin-dark .theme-switch {
-  color: #e2e8f0;
-}
-
-/* 🏷️ ADMIN TITLE */
-.admin-title{
-  font-size:1.25rem;
-  font-weight:600;
-  color:#0757db;
-}
-.admin-dark .admin-title{
-  color:#38bdf8;
-}
-/* 📌 ONE LINE TOPBAR FOR MOBILE */
+/* ?? MOBILE TOPBAR (CENTERED TITLE) */
 @media (max-width: 600px) {
   .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 12px;
-    gap: 8px;
-    width: 100%;
+    grid-template-columns: 40px 1fr 110px; /* left - center - right */
+    padding: 10px 12px;
   }
 
   .menu-icon {
-    font-size: 1.5rem;
-    flex-shrink: 0;
+    font-size: 1.6rem;
+    justify-self: start;
   }
 
   .admin-title {
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: #0757db;
-    flex: 1;                /* 👈 makes title take center space */
-    text-align: center;     /* 👈 centers title */
-    white-space: nowrap;    /* 👈 does not wrap text */
+    font-size: 1.15rem;
   }
 
   .right-controls {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-    flex-shrink: 0;
+    gap: 10px;
   }
 
   .theme-switch,
@@ -755,21 +446,11 @@ color: #0757db;
     font-size: 0.9rem;
     padding: 5px;
   }
+
   .notification svg {
     font-size: 0.9rem;
   }
-}
-/* 📌 MOBILE TOPBAR ALIGNMENT FIX */
-@media (max-width: 600px) {
-  .topbar {
-    display: grid;
-    grid-template-columns: 40px auto 110px; /* left - center - right */
-    align-items: center;
-    text-align: center;
-    padding: 10px 12px;
-  }
-
-  .menu-icon {
+}.menu-icon {
     grid-column: 1;
     justify-self: start;
     font-size: 1.6rem;
@@ -953,3 +634,4 @@ color: #0757db;
 .header-modern.show-search .search { display: block; max-width: 100%; margin: 6px 0; }
 .header-modern.show-search .brand .title,
 .header-modern.show-search .right-controls { display: none; }
+
