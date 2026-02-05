@@ -635,3 +635,55 @@ color: #0757db;
 .header-modern.show-search .brand .title,
 .header-modern.show-search .right-controls { display: none; }
 
+/* ============================
+   🌙 ADMIN DARK THEME
+============================ */
+.admin-dark body,
+.admin-dark .dashboard-container {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+.admin-dark .topbar {
+  background: #020617;
+  border-bottom: 1px solid #1e293b;
+}
+
+.admin-dark .main-content {
+  background: #020617;
+}
+
+.admin-dark .sidebar {
+  background: linear-gradient(180deg, #020617, #020617);
+}
+
+.admin-dark .sidebar-menu li:hover,
+.admin-dark .sidebar-menu li.active {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.admin-dark .profile-dropdown,
+.admin-dark .notif-dropdown,
+.admin-dark .edit-profile-modal,
+.admin-dark .logout-modal {
+  background: #020617;
+  color: #e5e7eb;
+  border: 1px solid #1e293b;
+}
+
+.admin-dark input {
+  background: #020617;
+  color: white;
+  border: 1px solid #1e293b;
+}
+
+.admin-dark .notification,
+.admin-dark .profile-icon {
+  background: #020617;
+  color: white;
+}
+
+.admin-dark .admin-title {
+  color: #93c5fd;
+}
+
