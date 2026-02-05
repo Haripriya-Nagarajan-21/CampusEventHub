@@ -329,12 +329,20 @@
      /* keep height consistent */
 }
 
-
-/* Reduce legend font size */
 .sidebar-open .chart-card .recharts-legend-item-text {
   font-size: 11px !important;
    margin-left: -3px !important;
   
+}
+
+/* ===========================
+   DARK MODE
+=========================== */
+html.admin-dark .feedback-header h2,
+html.admin-dark .feedback-analytics h3,
+html.admin-dark .feedback-charts h3,
+html.admin-dark .admin-feedback-container .chart-card h4 {
+  color: #e2e8f0 !important;
 }
 
 
