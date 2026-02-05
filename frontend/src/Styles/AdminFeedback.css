@@ -334,16 +334,38 @@
    margin-left: -3px !important;
   
 }
-
-/* ===========================
-   DARK MODE
-=========================== */
-html.admin-dark .feedback-header h2,
-html.admin-dark .feedback-analytics h3,
-html.admin-dark .feedback-charts h3,
-html.admin-dark .admin-feedback-container .chart-card h4 {
-  color: #e2e8f0 !important;
+html.admin-dark .admin-feedback-container,
+html.admin-dark .analytics-card,
+html.admin-dark .chart-card,
+html.admin-dark .feedback-table,
+html.admin-dark .feedback-table td,
+html.admin-dark .feedback-table th {
+  background: #020617 !important;
+  color: #e5e7eb !important;
 }
 
+html.admin-dark .feedback-table td {
+  border-bottom: 1px solid #1e293b !important;
+}
+
+html.admin-dark .feedback-table tbody tr:hover {
+  background: #020617 !important;
+}
+
+html.admin-dark .feedback-search-input {
+  background: #020617 !important;
+  color: #e5e7eb !important;
+  border: 1px solid #334155 !important;
+}
+
+html.admin-dark .feedback-search-input::placeholder {
+  color: #94a3b8 !important;
+}
+
+html.admin-dark .chart-card h4,
+html.admin-dark .feedback-header h2,
+html.admin-dark .feedback-analytics h3 {
+  color: #e5e7eb !important;
+}
 
 
