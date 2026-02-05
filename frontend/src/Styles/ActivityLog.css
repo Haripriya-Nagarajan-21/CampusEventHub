@@ -145,7 +145,52 @@
     color: #0757db;
   }
 
-  .activity-log-table td:last-child {
-    border-bottom: none;
+.activity-log-table td:last-child {
+  border-bottom: none;
+}
+}
+
+/* ===========================
+   DARK MODE
+=========================== */
+html.admin-dark .panel {
+  background: #1e293b;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+html.admin-dark .panel h3 {
+  color: #e2e8f0;
+}
+
+html.admin-dark .activity-log-table {
+  background: #0f172a;
+}
+
+html.admin-dark .activity-log-table tbody tr {
+  background: #0f172a;
+}
+
+html.admin-dark .activity-log-table td {
+  color: #e2e8f0;
+  border-bottom: 1px solid #1f2937;
+}
+
+html.admin-dark .activity-log-table td:first-child {
+  color: #f8fafc;
+}
+
+html.admin-dark .activity-log-table tbody tr:hover {
+  background: #111827;
+}
+
+@media (max-width: 768px) {
+  html.admin-dark .activity-log-table tbody tr {
+    background: #0f172a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  html.admin-dark .activity-log-table td::before {
+    color: #93c5fd;
   }
 }
