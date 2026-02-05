@@ -368,4 +368,17 @@ html.admin-dark .feedback-analytics h3 {
   color: #e5e7eb !important;
 }
 
+/* Dark mode: delete modal text */
+html.admin-dark .feedback-delete-modal {
+  background: #1e293b;
+  border-color: #334155;
+}
 
+html.admin-dark .feedback-delete-modal h3,
+html.admin-dark .feedback-delete-modal p {
+  color: #e2e8f0;
+}
+
+html.admin-dark .feedback-delete-modal .modal-warning {
+  color: #f87171;
+}
