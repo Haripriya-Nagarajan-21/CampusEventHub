@@ -418,7 +418,94 @@ color: #0757db;
   box-shadow: 0 6px 20px rgba(7, 87, 219, 0.3);
 }
 
-/* ?? MOBILE TOPBAR (CENTERED TITLE) */
+/* 🌙 DARK MODE */
+html.admin-dark,
+html.admin-dark body,
+html.admin-dark .dashboard-container,
+html.admin-dark .main-content {
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+}
+html.admin-dark .topbar,
+html.admin-dark .panel,
+html.admin-dark .card,
+html.admin-dark .activity-table,
+html.admin-dark .sidebar {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+  border-color: #334155 !important;
+}
+html.admin-dark .sidebar-menu li:hover,
+html.admin-dark .sidebar-menu li.active {
+  background: #334155 !important;
+  border-left: 4px solid #38bdf8 !important;
+}
+html.admin-dark .create-event-btn {
+  background: #38bdf8 !important;
+  color: #fff !important;
+}
+
+/* Ensure AdminDashboard text stays readable in dark mode */
+html.admin-dark .card p,
+html.admin-dark .card h2,
+html.admin-dark .card h5,
+html.admin-dark .panel h3,
+html.admin-dark .activity-table td,
+html.admin-dark .quick-actions button {
+  color: #e2e8f0 !important;
+}
+
+html.admin-dark .card h2 {
+  color: #7dd3fc !important;
+}
+
+html.admin-dark .activity-table th {
+  color: #fff !important;
+}
+
+html.admin-dark .activity-table tr:hover {
+  background: #111827 !important;
+}
+
+html.admin-dark .activity-table td:first-child {
+  color: #7dd3fc !important;
+}
+
+html.admin-dark .gray-btn {
+  background: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+/* 🌙 Moon/Sun Icon */
+.theme-switch {
+  cursor: pointer;
+  font-size: 18px;
+  padding: 6px 8px;
+  border-radius: 50%;
+  transition: 0.2s;
+  color: #0757db;
+}
+.theme-switch:hover {
+  background: rgba(56, 189, 248, 0.2);
+}
+html.admin-dark .theme-switch {
+  color: #e2e8f0;
+}
+
+/* 🏷️ ADMIN TITLE */
+.admin-title{
+  font-size:1.25rem;
+  font-weight:600;
+  color:#0757db;
+  text-align: center;
+  justify-self: center;
+  white-space: nowrap;
+}
+html.admin-dark .admin-title{
+  color:#38bdf8;
+}
+
+/* 📌 MOBILE TOPBAR (CENTERED TITLE) */
 @media (max-width: 600px) {
   .topbar {
     grid-template-columns: 40px 1fr 110px; /* left - center - right */
@@ -450,28 +537,6 @@ color: #0757db;
   .notification svg {
     font-size: 0.9rem;
   }
-}.menu-icon {
-    grid-column: 1;
-    justify-self: start;
-    font-size: 1.6rem;
-  }
-
-  .admin-title {
-    grid-column: 2;
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: #0757db;
-    text-align: center;
-  }
-
-  .right-controls {
-    grid-column: 3;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-
-  
 }
 
 /* ===========================
@@ -634,56 +699,4 @@ color: #0757db;
 .header-modern.show-search .search { display: block; max-width: 100%; margin: 6px 0; }
 .header-modern.show-search .brand .title,
 .header-modern.show-search .right-controls { display: none; }
-
-/* ============================
-   🌙 ADMIN DARK THEME
-============================ */
-.admin-dark body,
-.admin-dark .dashboard-container {
-  background: #0f172a;
-  color: #e5e7eb;
-}
-
-.admin-dark .topbar {
-  background: #020617;
-  border-bottom: 1px solid #1e293b;
-}
-
-.admin-dark .main-content {
-  background: #020617;
-}
-
-.admin-dark .sidebar {
-  background: linear-gradient(180deg, #020617, #020617);
-}
-
-.admin-dark .sidebar-menu li:hover,
-.admin-dark .sidebar-menu li.active {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.admin-dark .profile-dropdown,
-.admin-dark .notif-dropdown,
-.admin-dark .edit-profile-modal,
-.admin-dark .logout-modal {
-  background: #020617;
-  color: #e5e7eb;
-  border: 1px solid #1e293b;
-}
-
-.admin-dark input {
-  background: #020617;
-  color: white;
-  border: 1px solid #1e293b;
-}
-
-.admin-dark .notification,
-.admin-dark .profile-icon {
-  background: #020617;
-  color: white;
-}
-
-.admin-dark .admin-title {
-  color: #93c5fd;
-}
 
