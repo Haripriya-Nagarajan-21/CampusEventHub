@@ -1,10 +1,20 @@
 
 h3 {
-    margin: 12px 0 22px;
-    font-size: 22px;
-    font-weight: 600;
-    color: #222;
-    animation: fadeSlideUp 0.6s ease;
+  margin: 12px 0 22px;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--heading-color);
+  animation: fadeSlideUp 0.6s ease;
+}
+
+/* Light */
+:root {
+  --heading-color: #1f2933;
+}
+
+/* Dark */
+.dark {
+  --heading-color: #f1f5f9;
 }
 
 /* =========================================================
