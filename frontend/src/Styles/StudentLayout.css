@@ -838,52 +838,46 @@ color: #0757db;
     width: auto;
   }
 }
-/* ================================
-   🌙 DARK MODE – EDIT PROFILE FIX
+/* ===============================
+   DARK MODE – EDIT PROFILE ONLY
 ================================ */
 
-/* Modal background in dark */
-:root.dark .edit-profile-modal,
-{
+/* Modal background in dark mode */
+:root.dark .edit-profile-modal {
   background: rgba(15, 23, 36, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Headings */
-:root.dark .edit-profile-modal h3,
- {
-  color: #93c5fd; /* light blue */
+/* Heading */
+:root.dark .edit-profile-modal h3 {
+  color: #60a5fa; /* light blue */
 }
 
 /* Labels */
 :root.dark .edit-profile-modal label {
-  color: #cbd5f5;
+  color: #e5e7eb;
 }
 
-/* Inputs */
+/* Input fields */
 :root.dark .edit-profile-modal input {
   background: #0b1220;
-  color: #e5e7eb;
-  border: 1px solid #1f2937;
+  color: #e6eef8;
+  border: 1px solid #334155;
 }
 
-/* Input placeholder */
-:root.dark .edit-profile-modal input::placeholder {
-  color: #9ca3af;
-}
-
-/* Focus effect */
+/* Input focus */
 :root.dark .edit-profile-modal input:focus {
+  background: #0f172a;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
 }
 
-/* Buttons */
-:root.dark .cancel-btn {
-  background: #1f2937;
+/* Cancel button */
+:root.dark .edit-profile-modal .cancel-btn {
+  background: #1f2933;
   color: #e5e7eb;
 }
 
-:root.dark .cancel-btn:hover {
+:root.dark .edit-profile-modal .cancel-btn:hover {
   background: #374151;
 }
