@@ -844,14 +844,14 @@ color: #0757db;
 
 /* Modal background in dark */
 :root.dark .edit-profile-modal,
-:root.dark .logout-modal {
+{
   background: rgba(15, 23, 36, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* Headings */
 :root.dark .edit-profile-modal h3,
-:root.dark .logout-modal h3 {
+ {
   color: #93c5fd; /* light blue */
 }
 
