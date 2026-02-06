@@ -1,32 +1,50 @@
-/* ===== Feedback Page (Matches Event Registration Layout) ===== */
+/* ===================== THEME VARIABLES ===================== */
+:root {
+  --bg: #f8fafc;
+  --panel: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e5e7eb;
+  --primary: #2563eb;
+}
 
+[data-theme="dark"] {
+  --bg: #020617;
+  --panel: #0b1220;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --border: #1f2933;
+  --primary: #3b82f6;
+}
+
+/* ===== Feedback Page ===== */
 .feedback-wrapper {
   min-height: 100vh;
-  background: linear-gradient(180deg, #e8f1ff, #ffffff);
+  background: linear-gradient(180deg, var(--bg), var(--panel));
   padding: 40px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  
 }
 
-/* Outer card container (left + right) */
+/* Outer card */
 .feedback-card-container {
-  background: white;
+  background: var(--panel);
   width: 100%;
   max-width: 1100px;
   border-radius: 18px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.08);
   display: flex;
   overflow: hidden;
+  border: 1px solid var(--border);
 }
 
-/* LEFT SIDE — EVENT PREVIEW */
+/* LEFT SIDE */
 .feedback-left {
   flex: 1;
   padding: 28px;
-  background: #ffffff;
-  border-right: 1px solid #f1f1f1;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
 }
 
 .feedback-left img {
@@ -41,12 +59,12 @@
   margin: 0;
   font-size: 1.6rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--text);
 }
 
 .feedback-left p {
   margin: 6px 0;
-  color: #4b5563;
+  color: var(--muted);
   font-size: 0.95rem;
 }
 
@@ -56,13 +74,14 @@
   margin-top: 10px;
   gap: 5px;
   font-size: 14px;
+  color: var(--muted);
 }
 
-/* RIGHT SIDE — FEEDBACK FORM */
+/* RIGHT SIDE */
 .feedback-right {
   flex: 1;
   padding: 32px;
-  background: #ffffff;
+  background: var(--panel);
   display: flex;
   flex-direction: column;
 }
@@ -71,16 +90,16 @@
   margin: 0 0 20px 0;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #2563eb;
-  display: flex;           
-  justify-content: center; 
-  align-items: center; 
+  color: var(--primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .feedback-right label {
   font-weight: 600;
   margin: 12px 0 6px 0;
-  color: #111827;
+  color: var(--text);
 }
 
 .feedback-right input,
@@ -88,21 +107,29 @@
   width: 100%;
   padding: 12px;
   border-radius: 10px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border);
   font-size: 0.95rem;
   outline: none;
   transition: 0.2s;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.feedback-right input::placeholder,
+.feedback-right textarea::placeholder {
+  color: var(--muted);
 }
 
 .feedback-right input:focus,
 .feedback-right textarea:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 .feedback-right input[readonly] {
-  background: #f3f4f6;
+  background: rgba(148, 163, 184, 0.15);
   cursor: not-allowed;
+  color: var(--text);
 }
 
 /* STAR RATING */
@@ -110,15 +137,14 @@
   display: flex;
   gap: 10px;
   font-size: 1.6rem;
-  cursor: pointer;
   margin: 8px 0 10px 0;
 }
 
 /* BUTTONS */
 .submit-btn {
   margin-top: 16px;
-  background: #2563eb;
-  color: white;
+  background: var(--primary);
+  color: #fff;
   padding: 12px;
   border: none;
   border-radius: 10px;
@@ -129,13 +155,13 @@
 }
 
 .submit-btn:hover {
-  background: #1e40af;
+  filter: brightness(1.1);
 }
 
 .back-btn {
   margin-top: 10px;
   background: #6b7280;
-  color: white;
+  color: #fff;
   padding: 12px;
   border: none;
   border-radius: 10px;
@@ -143,14 +169,14 @@
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
-  text-align: center;      
-  display: flex;           
-  justify-content: center; 
-  align-items: center;    
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .back-btn:hover {
-  background: #4b5563;
+  filter: brightness(1.1);
 }
 
 /* RESPONSIVE */
@@ -158,18 +184,17 @@
   .feedback-card-container {
     flex-direction: column;
   }
+
   .feedback-left img {
     height: 200px;
   }
 }
+
 /* THANK YOU POPUP */
 .thank-you-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.4);
+  inset: 0;
+  background: rgba(0,0,0,0.45);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -178,12 +203,13 @@
 }
 
 .thank-you-card {
-  background: #fff;
+  background: var(--panel);
   padding: 30px 40px;
   border-radius: 12px;
   text-align: center;
   animation: scaleIn 0.3s ease;
   box-shadow: 0px 5px 20px rgba(0,0,0,0.2);
+  color: var(--text);
 }
 
 @keyframes fadeIn {
