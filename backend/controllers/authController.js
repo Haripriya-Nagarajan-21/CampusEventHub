@@ -95,7 +95,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
-    });
+   
 
     await transporter.sendMail({
       from: `"Event Hub" <${process.env.EMAIL_USER}>`,
