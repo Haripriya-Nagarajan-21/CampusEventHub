@@ -68,7 +68,7 @@ useEffect(() => {
   const fetchRegistrations = async () => {
     try {
       const { data } = await api.get(
-        `/registrations/student/${student.email}`
+       `/registrations/student/${encodeURIComponent(student.email)}`
       );
 
       setRegistrations(data.registrations || data || []);
@@ -91,7 +91,7 @@ useEffect(() => {
   const fetchRegistrations = async () => {
     try {
       const { data } = await api.get(
-        `/registrations/student/${student.email}`
+      `/registrations/student/${encodeURIComponent(student.email)}`
       );
 
       setRegistrations(
