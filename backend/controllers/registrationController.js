@@ -134,8 +134,11 @@ export const registerForEvent = async (req, res) => {
         </div>
       </div>
     `;
-    await sendEmail(email, "🎫 Event Registration Successful!", html);
-
+   try {
+  await sendEmail(email, "🎫 Event Registration Successful!", html);
+} catch (err) {
+  console.log("Email failed but registration saved");
+}
     res.status(201).json({ success: true, message: "Event registration successful! Confirmation email sent.", registration });
   } catch (error) {
     console.error("❌ Error registering for event:", error);
