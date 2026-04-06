@@ -93,16 +93,14 @@ useEffect(() => {
 
   fetchEvents();
 }, []);
-
-
-  // ================= FETCH REGISTRATIONS =================
+// ================= FETCH REGISTRATIONS =================
 useEffect(() => {
-  if (!student?.email) return;
+  if (!student || !student.email || !localStorage.getItem("user")) return;
 
   const fetchRegs = async () => {
     try {
       const { data } = await api.get(
-        `/registrations/student/${student.email}`
+        `/registrations/student/${encodeURIComponent(student.email)}`
       );
 
       const regs = (data.registrations || data || []).sort(
@@ -111,7 +109,8 @@ useEffect(() => {
       );
 
       setRegistrations(regs);
-    } catch {
+    } catch (err) {
+      console.log("❌ Registration fetch error:", err?.response?.data || err.message);
       setRegistrations([]);
     }
   };
@@ -120,22 +119,14 @@ useEffect(() => {
 }, [student?.email]);
 
 
-  // ================= NOTIFICATIONS =================
-  const getApprovedIds = () =>
-    registrations
-      .filter((r) => r.status === "Approved")
-      .map((r) => r._id);
-
-  const seenKey = (email) => `seenApproved_${email}`;
-
 // 🔄 AUTO REFRESH REGISTRATIONS EVERY 10 SECONDS
 useEffect(() => {
-  if (!student?.email) return;
+  if (!student || !student.email || !localStorage.getItem("user")) return;
 
   const fetchRegs = async () => {
     try {
       const { data } = await api.get(
-        `/registrations/student/${student.email}`
+        `/registrations/student/${encodeURIComponent(student.email)}`
       );
 
       const sorted = (data.registrations || data || []).sort(
@@ -144,19 +135,28 @@ useEffect(() => {
       );
 
       setRegistrations(sorted);
-    } catch {
-      console.log("Auto-refresh error");
+    } catch (err) {
+      console.log("❌ Auto-refresh error:", err?.response?.data || err.message);
     }
   };
 
-  // first load immediately
+  // first load
   fetchRegs();
 
-  // auto refresh every 10s
+  // interval
   const interval = setInterval(fetchRegs, 10000);
 
   return () => clearInterval(interval);
 }, [student?.email]);
+
+ 
+  // ================= NOTIFICATIONS =================
+  const getApprovedIds = () =>
+    registrations
+      .filter((r) => r.status === "Approved")
+      .map((r) => r._id);
+
+  const seenKey = (email) => `seenApproved_${email}`;
 
   // ================= UTILITIES =================
  const getGreeting = (username) => {
