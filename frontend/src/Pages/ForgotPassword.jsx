@@ -42,11 +42,19 @@ const ForgotPassword = () => {
 
       navigate("/verify-otp", { state: { email } });
 
-    } catch (err) {
-      notifyError(
-        err.response?.data?.message || "An error occurred. Please try again."
-      );
-    } finally {
+    }catch (err) {
+  console.log("FULL ERROR:", err);
+  console.log("RESPONSE:", err.response);
+  console.log("DATA:", err.response?.data);
+
+  const message =
+    err.response?.data?.message ||
+    err.response?.data ||
+    err.message ||
+    "An error occurred. Please try again.";
+
+  notifyError(message);
+} finally {
       setIsLoading(false);
     }
   };
